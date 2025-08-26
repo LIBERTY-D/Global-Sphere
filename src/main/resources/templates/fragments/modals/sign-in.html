@@ -1,0 +1,81 @@
+<div class="fixed inset-0 z-50 items-center justify-center"
+         id="modal-signin"
+         th:fragment="sign-in"
+         th:classappend="${showSignInModal} ? 'flex' : ' hidden'">
+
+    <p th:text="${showSignInModal}"></p>
+    <!-- Overlay -->
+    <div aria-hidden="true" class="absolute inset-0 bg-gray-900/50"></div>
+
+    <!-- Modal content -->
+    <div class="relative w-full md:max-w-md rounded-2xl bg-white shadow-xl">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b p-4">
+            <h3 class="font-semibold">Sign in</h3>
+            <button aria-label="Close"
+                    class="rounded-lg p-2 hover:bg-gray-50"
+                    id="btn-close-signin">
+                <svg class="h-5 w-5" fill="none"
+                     stroke="currentColor" stroke-width="1.5"
+                     viewBox="0 0 24 24"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 18 18 6M6 6l12 12"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Form -->
+        <form class="p-5 space-y-3"
+              method="post"
+              th:action="@{/signin}"
+              th:object="${signinForm}">
+
+            <!-- Email Field -->
+            <label class="block text-sm">
+                <span class="text-gray-700">Email</span>
+                <input class="mt-1 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm
+                             focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                       th:field="*{email}" />
+                <p th:if="${#fields.hasErrors('email')}"
+                   th:errors="*{email}"
+                   class="mt-1 text-sm text-red-600"></p>
+            </label>
+
+            <!-- Password Field -->
+            <label class="block text-sm">
+                <span class="text-gray-700">Password</span>
+                <input class="mt-1 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm
+                             focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                       th:field="*{password}" type="password"/>
+                <p th:if="${#fields.hasErrors('password')}"
+                   th:errors="*{password}"
+                   class="mt-1 text-sm text-red-600"></p>
+            </label>
+
+            <!-- Forgot password link -->
+            <div class="flex items-center justify-between">
+                <a class="text-sm font-medium text-primary-700"
+                   id="btn-open-forgot-password"
+                   href="#">Forgot password?</a>
+            </div>
+
+            <!-- Submit button -->
+            <button id="signInUser"
+                    type="submit"
+                    class="w-full rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-black">
+                Sign in
+            </button>
+
+            <!-- Sign up link -->
+            <p class="text-center text-sm text-gray-600">No account?
+                <a id="signing-signup"
+                   class="font-semibold text-primary-700"
+                   href="#">Sign up</a>
+            </p>
+
+        </form>
+    </div>
+</div>

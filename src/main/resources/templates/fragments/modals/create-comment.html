@@ -1,0 +1,32 @@
+<div th:fragment="create-comment">
+    <div id="commentModal"
+         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" th:classappend="${showCommentModal} ? 'flex' : 'hidden' ">
+        <div class="bg-white rounded-2xl shadow-lg w-full max-w-md p-6">
+            <h2 class="text-lg font-semibold mb-4">Add a Comment</h2>
+
+            <form th:action="@{/comments/add}" th:object="${createCommentForm}" method="post" class="space-y-4">
+                <!-- Post ID -->
+                <input type="hidden" th:field="*{postId}" />
+
+                <!-- Author (hidden) -->
+                <input type="hidden" th:field="*{author}"/>
+
+                <!-- Comment content -->
+                <textarea th:field="*{text}" rows="4" placeholder="Write your comment..."
+                          class="w-full rounded-lg border px-3 py-2 focus:ring focus:ring-indigo-300"></textarea>
+                <p th:if="${#fields.hasErrors('text')}" th:errors="*{text}" class="text-red-500 text-sm mt-1"></p>
+
+                <!-- Submit -->
+                <div class="flex justify-end gap-2">
+                    <button type="button"
+                            onclick="document.getElementById('commentModal').classList.add('hidden')"
+                            class="px-4 py-2 text-sm text-gray-500 hover:underline">Cancel</button>
+                    <button type="submit"
+                            class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                        Post Comment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

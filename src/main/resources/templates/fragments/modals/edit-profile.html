@@ -1,0 +1,65 @@
+<div th:fragment="editProfileModal">
+    <div id="editProfileModal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="bg-white rounded-2xl shadow-lg w-96 p-6">
+            <h2 class="text-xl font-bold mb-4">Edit Profile</h2>
+
+            <form th:action="@{/profile/edit}" th:object="${editProfileForm}"
+                  method="post" enctype="multipart/form-data" class="space-y-4">
+
+                <!-- Name -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Name</label>
+                    <input type="text" th:field="*{name}"
+                           class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300" required>
+                    <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-sm text-red-500 mt-1"></p>
+                </div>
+
+                <!-- Bio -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Bio</label>
+                    <textarea th:field="*{bio}" rows="3"
+                              class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300"></textarea>
+                    <p th:if="${#fields.hasErrors('bio')}" th:errors="*{bio}" class="text-sm text-red-500 mt-1"></p>
+                </div>
+
+                <!-- Occupation -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Occupation</label>
+                    <select th:field="*{occupation}" class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300">
+                        <option value="" disabled>Select your occupation</option>
+                        <option value="Student">Student</option>
+                        <option value="Instructor">Instructor</option>
+                        <option value="Mentor">Mentor</option>
+                        <option value="Professional">Professional</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <p th:if="${#fields.hasErrors('occupation')}" th:errors="*{occupation}" class="text-sm text-red-500 mt-1"></p>
+                </div>
+
+                <!-- Job Title / Profession -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Job Title / Profession</label>
+                    <input type="text" th:field="*{jobTitle}" placeholder="e.g., Java Developer, Web Developer, Data Scientist"
+                           class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300">
+                    <p th:if="${#fields.hasErrors('jobTitle')}" th:errors="*{jobTitle}" class="text-sm text-red-500 mt-1"></p>
+                </div>
+
+                <!-- Avatar -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Avatar</label>
+                    <input type="file" th:field="*{avatar}" accept="image/*"
+                           class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300">
+                    <p th:if="${#fields.hasErrors('avatar')}" th:errors="*{avatar}" class="text-sm text-red-500 mt-1"></p>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700">
+                    Save Changes
+                </button>
+            </form>
+
+            <button onclick="document.getElementById('editProfileModal').classList.add('hidden')"
+                    class="mt-4 text-sm text-gray-500 hover:underline">Cancel</button>
+        </div>
+    </div>
+</div>

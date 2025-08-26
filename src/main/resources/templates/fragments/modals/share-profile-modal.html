@@ -1,0 +1,54 @@
+<div th:fragment="shareProfileModal">
+    <div id="shareProfileModal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="bg-white rounded-2xl shadow-lg w-96 p-6">
+            <h2 class="text-lg font-bold mb-4">Share Profile</h2>
+            <p class="text-sm text-gray-600 mb-4">Choose a platform to share your profile:</p>
+
+            <div class="space-y-3">
+                <!-- Copy Link -->
+                <button onclick="copyProfileLink()"
+                        class="w-full bg-gray-200 text-gray-800 py-2 rounded-lg hover:bg-gray-300">
+                    📎 Copy Profile Link
+                </button>
+
+                <!-- WhatsApp -->
+                <a th:href="'https://api.whatsapp.com/send?text=Check out my profile: ' + ${profileUrl}"
+                   target="_blank"
+                   class="block w-full text-center bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">
+                    📱 Share on WhatsApp
+                </a>
+
+                <!-- Facebook -->
+                <a th:href="'https://www.facebook.com/sharer/sharer.php?u=' + ${profileUrl}"
+                   target="_blank"
+                   class="block w-full text-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+                    👍 Share on Facebook
+                </a>
+
+                <!-- Instagram (no direct share, fallback to copy link) -->
+                <button onclick="copyProfileLink()"
+                        class="w-full bg-pink-500 text-white py-2 rounded-lg hover:bg-pink-600">
+                    📸 Share on Instagram (Copy Link)
+                </button>
+
+                <!-- Twitter/X -->
+                <a th:href="'https://twitter.com/intent/tweet?url=' + ${profileUrl} + '&text=Check out my profile!'"
+                   target="_blank"
+                   class="block w-full text-center bg-black text-white py-2 rounded-lg hover:bg-gray-800">
+                    🐦 Share on Twitter (X)
+                </a>
+            </div>
+
+            <!-- Cancel -->
+            <button id="close-my-profile-btn"
+                    class="mt-4 text-sm text-gray-500 hover:underline">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        function copyProfileLink() {
+          navigator.clipboard.writeText(window.location.href);
+          alert("Profile link copied to clipboard!");
+        }
+    </script>
+</div>

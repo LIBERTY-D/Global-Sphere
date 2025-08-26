@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${resource.title}">Resource</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                primary: {
+                  50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc', 400: '#818cf8',
+                  500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 800: '#3730a3', 900: '#312e81'
+                }
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+
+<div class="max-w-4xl mx-auto px-4 py-12 space-y-6">
+
+    <!-- Logo -->
+    <a class="flex items-center gap-3 mb-8" th:href="@{/home}">
+        <span class="inline-flex h-12 w-12 items-center justify-center rounded-full
+                     bg-gradient-to-br from-primary-500 to-primary-700
+                     text-white font-extrabold text-lg shadow-md transform transition
+                     hover:scale-110">
+            GS
+        </span>
+        <span class="text-2xl font-bold text-indigo-900 drop-shadow-sm">Global Sphere</span>
+    </a>
+
+    <!-- Resource Card -->
+    <section class="rounded-2xl border bg-white shadow-lg p-6 transition hover:shadow-2xl">
+
+        <!-- Cover image -->
+        <div th:if="${resource.imageUrl != null}" class="mb-6">
+            <img th:src="${resource.imageUrl}" alt="Cover"
+                 class="w-full h-64 object-cover rounded-xl shadow-sm border"/>
+        </div>
+
+        <!-- Title + Actions -->
+        <div class="flex items-center justify-between mb-3">
+            <h1 class="text-3xl font-bold text-indigo-900" th:text="${resource.title}">Resource Title</h1>
+
+            <!-- Edit/Delete buttons -->
+            <div th:if="${currentUser?.id == resource.authorId}" class="flex gap-2">
+                <!-- Edit modal trigger -->
+                <button class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition"
+                        id="modal-edit-resource-btn">
+                    Edit
+                </button>
+
+                <!-- Delete form -->
+                <form th:action="@{/resources/delete/{id}(id=${resource.id})}" method="post" class="inline">
+                    <button type="submit"
+                            class="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 transition">
+                        Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Author + date -->
+        <p class="text-sm text-gray-500 mb-6">
+            By <span class="font-medium" th:text="${resource.author}">Author</span>
+            • <span th:text="${#temporals.format(resource.publishedAt, 'MMM dd, yyyy')}">Jan 1, 2025</span>
+        </p>
+
+        <!-- Resource content -->
+        <article class="prose max-w-none text-gray-700 mb-8">
+            <p th:text="${resource.content}">
+                Full resource content goes here... It can be long, with explanations, code, or links.
+            </p>
+        </article>
+
+        <!-- External link -->
+        <div th:if="${resource.externalUrl != null}" class="mb-6">
+            <a th:href="${resource.externalUrl}" target="_blank"
+               class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow hover:bg-indigo-700 hover:shadow-lg transition">
+                🔗 Visit external resource
+            </a>
+        </div>
+
+        <!-- Back to resources -->
+        <div class="mt-4">
+            <a th:href="@{/resources}"
+               class="text-sm text-indigo-600 font-medium hover:underline hover:text-indigo-800">
+                ← Back to all resources
+            </a>
+        </div>
+
+    </section>
+
+
+    <div th:replace="~{fragments/resource/edit-resource-modal :: modal-edit-resource(${resource})}"></div>
+    <div th:replace="~{fragments/resource/create-resource :: modal-create-resource}"></div>
+
+</div>
+
+
+<script th:src="@{/js/resource.js}"></script>
+
+<div th:replace="~{/fragments/footer/footer :: footer}"></div>
+</body>
+</html>

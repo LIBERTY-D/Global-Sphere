@@ -1,0 +1,41 @@
+<div th:fragment="sign-up">
+    <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+         id="modal-signup"
+         th:classappend="${showPasswordSignUpModal} ? 'flex' : 'hidden'" >
+        <div class="bg-white rounded-2xl shadow-lg w-96 p-6">
+            <h2 class="text-xl font-bold mb-4">Sign Up</h2>
+            <form class="space-y-4" th:action="@{/register}" method="post"
+                  th:object="${signUpForm}">
+                <input
+                        class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300" th:field="*{username}" placeholder="Username">
+                <p th:if="${#fields.hasErrors('username')}"
+                   th:errors="*{username}"
+                   class="mt-1 text-sm text-red-600"></p>
+                <input
+                        class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300" th:field="*{email}" placeholder="Email"
+                       type="email">
+                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                   class="mt-1 text-sm text-red-600"></p>
+                <input
+                        class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300" th:field="*{password}" placeholder="Password"
+                       type="password">
+                <p th:if="${#fields.hasErrors('password')}"
+                   th:errors="*{password}"
+                   class="mt-1 text-sm text-red-600"></p>
+                <input
+                        class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300" th:field="*{confirmPassword}"
+                       placeholder="Confirm Password"
+                       type="password">
+                <p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"
+                   class="mt-1 text-sm text-red-600"></p>
+                <button class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700"
+                        type="submit">
+                    Create Account
+                </button>
+            </form>
+            <button class="mt-4 text-sm text-gray-500 hover:underline" type="button"
+                    id="close-sign-up">Cancel
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+<aside class="lg:col-span-3 space-y-6" th:fragment="sidebar">
+    <section class="rounded-2xl border bg-white p-5 shadow-sm">
+        <div class="flex items-center gap-4">
+            <img
+                    alt="Your avatar"
+                    class="h-14 w-14 rounded-full" th:src="${currentUser?.avatar != null} ? @{${currentUser.avatar}} : @{/assets/blank.jpg}"/>
+
+            <div>
+                <h3 class="font-semibold"
+                    th:text="${currentUser?.name ?: 'Alex Doe'}">Alex Doe</h3>
+                <p class="text-sm text-gray-500"
+                   th:text="${currentUser?.bio ?: 'Computer Science • Spring MVC'}">
+                    Computer Science • Spring MVC</p>
+            </div>
+        </div>
+        <div class="mt-4 grid grid-cols-3 text-center text-sm">
+            <div>
+                <div class="font-semibold"
+                     th:text="${currentUser?.followersCount ?: 0}">0
+                </div>
+                <div class="text-gray-500">Followers</div>
+            </div>
+            <div>
+                <div class="font-semibold"
+                     th:text="${currentUser?.followingCount ?: 0}">0
+                </div>
+                <div class="text-gray-500">Following</div>
+            </div>
+            <div>
+                <div class="font-semibold"
+                     th:text="${currentUser?.postsCount ?: 0}">0
+                </div>
+                <div class="text-gray-500">Posts</div>
+            </div>
+        </div>
+        <div class="mt-4 flex gap-2">
+            <a class="flex-1 rounded-xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-black"
+               href="#" id="edit-profile">Edit
+                profile</a>
+            <button
+                    class="flex-1 rounded-xl border border-gray-200 px-4 py-2 text-sm font-semibold hover:bg-gray-50" id="share-my-profile">
+                Share
+            </button>
+        </div>
+    </section>
+</aside>
+

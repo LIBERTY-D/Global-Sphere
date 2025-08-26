@@ -1,0 +1,72 @@
+<div th:fragment="create-post">
+    <div
+            class="fixed inset-0 z-50 items-end md:items-center justify-center" id="modal-create" th:classappend="${showCreatePostModal} ? 'flex' : 'hidden' " >
+
+        <div aria-hidden="true" class="absolute inset-0 bg-gray-900/50"></div>
+        <div class="relative w-full md:max-w-xl rounded-t-2xl md:rounded-2xl bg-white shadow-xl">
+            <div class="flex items-center justify-between border-b p-4">
+                <h3 class="font-semibold">Create a post</h3>
+                <button aria-label="Close" class="rounded-lg p-2 hover:bg-gray-50" id="btn-close-create">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="createPostForm" th:action="@{/create-post}" th:object="${createPostForm}"
+                  method="post" enctype="multipart/form-data" class="p-4 space-y-4">
+
+                <!-- Hidden backend fields -->
+                <input type="hidden" th:field="*{author}" />
+                <input type="hidden" th:field="*{role}" />
+                <input type="hidden" th:field="*{avatar}" />
+
+                <!-- Post content -->
+                <div class="flex items-start gap-3">
+                    <img alt="Your avatar" class="h-14 w-14 rounded-full"
+                         th:src="${currentUser?.avatar != null} ? @{${currentUser.avatar}} : @{/assets/blank.jpg}"/>
+                    <textarea th:field="*{content}"
+                              placeholder="What did you learn today?" rows="5"
+                              class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20"></textarea>
+                </div>
+                <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="text-red-500 text-sm mt-1"></p>
+
+                <!-- Code snippet -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Add Code Snippet</label>
+                    <textarea th:field="*{codeSnippet}" rows="4"
+                              class="w-full font-mono rounded-xl border border-gray-200 px-3 py-2 text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20"></textarea>
+                    <p th:if="${#fields.hasErrors('codeSnippet')}" th:errors="*{codeSnippet}" class="text-red-500 text-sm mt-1"></p>
+                </div>
+
+                <!-- Link -->
+                <div>
+                    <input type="url" th:field="*{link}" placeholder="Add link"
+                           class="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm bg-gray-50 focus:ring-2 focus:ring-primary-500/20"/>
+                    <p th:if="${#fields.hasErrors('link')}" th:errors="*{link}" class="text-red-500 text-sm mt-1"></p>
+                </div>
+
+                <!-- File Upload -->
+                <div>
+                    <button type="button" id="uploadFileBtn"
+                            class="rounded-xl border border-gray-200 px-3 py-1.5 text-sm hover:bg-gray-50">
+                        Upload file
+                    </button>
+                    <input type="file" th:field="*{file}" id="fileInput" class="hidden"/>
+                    <p th:if="${#fields.hasErrors('file')}" th:errors="*{file}" class="text-red-500 text-sm mt-1"></p>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="flex justify-end gap-2">
+                    <button type="button" id="btn-cancel-create"
+                            class="rounded-xl border border-gray-200 px-4 py-2 text-sm hover:bg-gray-50">Cancel</button>
+                    <button type="submit"
+                            class="rounded-xl bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700">
+                        Post
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+spring:
+  application:
+   name: Global Sphere
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  thymeleaf:
+    cache: false
+server:
+#  servlet:
+#    context-path: /global
+
+
+  port: 8080
