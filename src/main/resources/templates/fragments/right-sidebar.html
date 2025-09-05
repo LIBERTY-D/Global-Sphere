@@ -1,18 +1,22 @@
-<aside class="lg:col-span-3 space-y-6" th:fragment="right-sidebar">
+<aside class="lg:col-span-3 space-y-6"
+       th:fragment="right-sidebar(follow, featuredResources)">
     <!-- People to follow -->
     <section class="rounded-2xl border bg-white p-5 shadow-sm" id="people">
         <h4 class="mb-3 text-sm font-semibold text-gray-700">People to
             follow</h4>
-        <ul class="space-y-3">
-            <li th:replace="~{fragments/person :: person}"></li>
 
-            <li th:replace="~{fragments/person :: person}"></li>
-        </ul>
+        <!-- Include the person list fragment -->
+        <div th:if="${!#lists.isEmpty(follow)}"
+             th:replace="~{fragments/person :: personList(follow=${follow})}">
+        </div>
+
+        <p th:if="${#lists.isEmpty(follow)}" class="text-gray-500">No people to
+            follow 😔</p>
     </section>
 
     <!-- Resources -->
-    <div th:replace="~{/fragments/resource/featured-resources :: featured-resources}"></div>
+    <div th:replace="~{/fragments/resource/featured-resources :: featured-resources(featuredResources=${featuredResources})}"></div>
+
     <!-- Discussions quick post -->
     <div th:replace="~{/fragments/discussion-post :: discussion-post}"></div>
-
 </aside>

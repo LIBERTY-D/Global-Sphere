@@ -1,23 +1,28 @@
 package com.daniel.app.global.sphere.models;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-
-import java.time.LocalDateTime;
 
 import lombok.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Resource {
+@Entity
+public class Resource extends  BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long authorId;
+    private  Long authorId;
     private String title;
     private String description;
     private String content;
     private String imageUrl;
     private String externalUrl;
     private String author;
-    private LocalDateTime publishedAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "resource_id")
+    private  User user;
 }

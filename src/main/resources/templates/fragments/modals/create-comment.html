@@ -1,4 +1,4 @@
-<div th:fragment="create-comment">
+<div th:fragment="create-comment(article)">
     <div id="commentModal"
          class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" th:classappend="${showCommentModal} ? 'flex' : 'hidden' ">
         <div class="bg-white rounded-2xl shadow-lg w-full max-w-md p-6">
@@ -6,7 +6,7 @@
 
             <form th:action="@{/comments/add}" th:object="${createCommentForm}" method="post" class="space-y-4">
                 <!-- Post ID -->
-                <input type="hidden" th:field="*{postId}" />
+                <input type="hidden" name="postId" th:value="${article.id}" />
 
                 <!-- Author (hidden) -->
                 <input type="hidden" th:field="*{author}"/>

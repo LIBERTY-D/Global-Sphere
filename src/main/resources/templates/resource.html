@@ -69,7 +69,8 @@
         <!-- Author + date -->
         <p class="text-sm text-gray-500 mb-6">
             By <span class="font-medium" th:text="${resource.author}">Author</span>
-            • <span th:text="${#temporals.format(resource.publishedAt, 'MMM dd, yyyy')}">Jan 1, 2025</span>
+            • <span
+                th:text="${#temporals.format(resource.createdAt, 'MMM dd, yyyy')}">Jan 1, 2025</span>
         </p>
 
         <!-- Resource content -->

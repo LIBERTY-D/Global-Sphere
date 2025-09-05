@@ -5,11 +5,27 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+  main:
+    allow-circular-references: true #dev only
   thymeleaf:
     cache: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/global_db
+    username: userDemo
+    password: password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+
 server:
 #  servlet:
 #    context-path: /global
-
 
   port: 8080

@@ -14,18 +14,20 @@
                 <input
                         class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300" th:field="*{email}" placeholder="Email"
                        type="email">
-                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                <p th:if="${#fields.hasErrors('email')}"
+                   th:errors="*{email}"
                    class="mt-1 text-sm text-red-600"></p>
                 <input
+                <input
                         class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300" th:field="*{password}" placeholder="Password"
-                       type="password">
+                >
                 <p th:if="${#fields.hasErrors('password')}"
                    th:errors="*{password}"
                    class="mt-1 text-sm text-red-600"></p>
                 <input
                         class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300" th:field="*{confirmPassword}"
                        placeholder="Confirm Password"
-                       type="password">
+                       >
                 <p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"
                    class="mt-1 text-sm text-red-600"></p>
                 <button class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700"

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Post</title>
+    <link rel="stylesheet" href="/assets/styles.css">
+    <meta name="description"
+          content="A TailwindCSS UI for a social learning platform built for Spring MVC.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                primary: {
+                  50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc', 400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 800: '#3730a3', 900: '#312e81'
+                },
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 p-8">
+<div class="max-w-2xl mx-auto bg-white rounded-2xl shadow p-6">
+    <h2 class="text-xl font-semibold mb-4">Edit Post</h2>
+    <form th:action="@{/feeds/edit/{id}(id=${post.id})}" method="post"
+          th:object="${updateFeedDto}" class="space-y-4">
+        <!-- Post Content -->
+        <label class="block">
+            <span class="text-gray-700">Content</span>
+            <textarea th:field="*{content}" rows="4"
+                      class="w-full p-2 border rounded"></textarea>
+            <p class="text-red-600 text-sm"
+               th:if="${#fields.hasErrors('content')}"
+               th:errors="*{content}"></p>
+        </label>
+
+        <!-- Code Snippet -->
+        <label class="block">
+            <span class="text-gray-700">Code Snippet (optional)</span>
+            <textarea th:field="*{codeSnippet}" rows="4"
+                      class="w-full p-2 border rounded"></textarea>
+            <p class="text-red-600 text-sm"
+               th:if="${#fields.hasErrors('codeSnippet')}"
+               th:errors="*{codeSnippet}"></p>
+        </label>
+
+        <!-- Link -->
+        <label class="block">
+            <span class="text-gray-700">Link (optional)</span>
+            <input type="text" th:field="*{link}"
+                   class="w-full p-2 border rounded">
+            <p class="text-red-600 text-sm" th:if="${#fields.hasErrors('link')}"
+               th:errors="*{link}"></p>
+        </label>
+
+        <div class="flex justify-end gap-2">
+            <a th:href="@{/home}"
+               class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</a>
+            <button type="submit"
+                    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                Update Post
+            </button>
+        </div>
+    </form>
+    <!-- Footer -->
+    <div class="mt-5">
+        <div th:replace="~{/fragments/footer/footer :: footer}"></div>
+    </div>
+</div>
+
+
+</body>
+</html>

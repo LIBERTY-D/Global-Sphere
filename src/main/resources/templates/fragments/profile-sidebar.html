@@ -3,7 +3,8 @@
         <div class="flex items-center gap-4">
             <img
                     alt="Your avatar"
-                    class="h-14 w-14 rounded-full" th:src="${currentUser?.avatar != null} ? @{${currentUser.avatar}} : @{/assets/blank.jpg}"/>
+                    class="h-14 w-14 rounded-full"
+                    th:src="${currentUser?.avatar != null} ? @{${currentUser.avatar}} : @{/assets/blank.jpg}"/>
 
             <div>
                 <h3 class="font-semibold"
@@ -38,7 +39,8 @@
                href="#" id="edit-profile">Edit
                 profile</a>
             <button
-                    class="flex-1 rounded-xl border border-gray-200 px-4 py-2 text-sm font-semibold hover:bg-gray-50" id="share-my-profile">
+                    class="flex-1 rounded-xl border border-gray-200 px-4 py-2 text-sm font-semibold hover:bg-gray-50"
+                    id="share-my-profile">
                 Share
             </button>
         </div>

@@ -1,16 +1,21 @@
-<article th:fragment="resource-card" id="resource-card" class="rounded-2xl border bg-white shadow-sm
+<article th:fragment="resource-card(resource)" id="resource-card"
+         class="rounded-2xl border bg-white shadow-sm
          overflow-hidden">
     <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop"
          class="h-40 w-full object-cover" alt=""/>
     <div class="p-5">
-        <h3 class="font-semibold">REST APIs & Validation</h3>
-        <p class="mt-1 text-sm text-gray-600 line-clamp-2">Build robust
+        <h3 class="font-semibold" th:text="${resource.title}">REST APIs &
+            Validation</h3>
+        <p class="mt-1 text-sm text-gray-600 line-clamp-2"
+           th:text="${resource.description}">Build robust
             JSON APIs with DTOs, @Valid, and error handling.</p>
         <div class="mt-4 flex items-center justify-between">
             <div class="text-sm text-gray-500">31 resources</div>
-            <button class="rounded-lg bg-gray-900 px-3 py-1.5 text-sm font-semibold text-white hover:bg-black">
+            <a
+                    th:href="@{/resources/{id}(id=${resource.id})}"
+                    class="rounded-lg bg-gray-900 px-3 py-1.5 text-sm font-semibold text-white hover:bg-black">
                 Browse
-            </button>
+            </a>
         </div>
     </div>
 </article>

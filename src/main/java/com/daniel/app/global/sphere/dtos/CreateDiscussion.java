@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 public class CreateDiscussion {
 
     private User author;
-
     @NotBlank(message = "Discussion text cannot be empty")
     @Size(max = 2000, message = "Discussion text cannot exceed 2000 characters")
     private String text;

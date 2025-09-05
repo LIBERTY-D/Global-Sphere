@@ -1,22 +1,16 @@
 package com.daniel.app.global.sphere.dtos;
 
 
-import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
-
-
-import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
-@ToString(exclude = "file")
-public class CreatePost {
+@AllArgsConstructor
+public class UpdateFeedDto  {
 
     @NotBlank(message = "Post content cannot be empty")
     @Size(max = 2000, message = "Post content cannot exceed 2000 characters")
@@ -27,11 +21,4 @@ public class CreatePost {
 
     @Size(max = 500, message = "Link cannot exceed 500 characters")
     private String link;
-
-    private MultipartFile file;
-
-    // Hidden fields filled from backend
-    private String author;
-    private String role;
-    private String avatar;
 }

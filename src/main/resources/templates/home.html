@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -24,6 +25,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
           rel="stylesheet">
+
     <style>
         html, body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -37,7 +39,7 @@
 <div th:replace="~{fragments/hero :: hero}"></div>
 
 <!-- Main grid -->
-<main id="feed"
+<main id="feed" sec:authorize="isAuthenticated()"
       class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
     <!-- Left sidebar -->
     <aside class="lg:col-span-3 space-y-6">
@@ -54,20 +56,26 @@
     <!-- Feed -->
     <section class="lg:col-span-6 space-y-6">
         <!-- Create Post card -->
-        <div th:replace="~{fragments/share :: share}"></div>
-        <!-- Sample post -->
-        <div th:each="item : ${feed}">
+        <div th:replace="~{fragments/share :: share(${currentUser})}"></div>
+
+        <!-- Show feeds if available -->
+        <div th:if="${!#lists.isEmpty(feeds)}" th:each="item : ${feeds}">
             <div th:replace="~{fragments/feed :: feedItem(${item})}"></div>
         </div>
-
+        <!-- Show fallback if no feeds -->
+        <div th:if="${#lists.isEmpty(feeds)}"
+             class="text-gray-500 text-center py-52 flex items-center justify-center">
+            No available feeds 😔
+        </div>
     </section>
 
     <!-- Right sidebar -->
-    <div th:replace="~{fragments/right-sidebar :: right-sidebar}"></div>
+    <div th:replace="~{fragments/right-sidebar :: right-sidebar(${follow}, ${featuredResources})}"></div>
 </main>
 
 <!-- Resource grid (explore) -->
-<section id="resources-link" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
+<section id="resources-link"
+         class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
     <div class="mb-4 flex items-center justify-between">
         <h2 class="text-xl font-semibold">Explore topics</h2>
         <a th:href="@{/resources}"
@@ -75,10 +83,16 @@
             →</a>
     </div>
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <div th:replace="~{fragments/cards/resource-card :: resource-card }"></div>
-        <div th:replace="~{fragments/cards/resource-card :: resource-card }"></div>
-        <div th:replace="~{fragments/cards/resource-card :: resource-card }"></div>
+        <div th:each="resource : ${featuredResources}"
+             th:insert="~{fragments/cards/resource-card :: resource-card(resource=${resource})}">
+        </div>
     </div>
+
+
+    <p class="text-gray-500" th:if="${#lists.isEmpty(featuredResources)}">
+        No Explore topic resources available 😔
+    </p>
+
 </section>
 
 <!-- Footer -->
@@ -90,7 +104,6 @@
 <div th:replace="~{/fragments/modals/forgot-password :: forgot-password}"></div>
 <div th:replace="~{/fragments/modals/edit-profile :: editProfileModal}"></div>
 <div th:replace="~{/fragments/modals/share-profile-modal :: shareProfileModal}"></div>
-<div th:replace="~{/fragments/modals/create-comment :: create-comment}"></div>
 
 
 <script th:src="@{/js/home.js}"></script>

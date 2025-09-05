@@ -189,7 +189,7 @@ uploadBtn.addEventListener("click", () => {
  // create account hero button
 let createAccountHeroBtn =  $("#create-account-hero");
 
-createAccountHeroBtn.addEventListener("click",(e)=>{
+createAccountHeroBtn?.addEventListener("click",(e)=>{
     e.preventDefault();
     flex(modalSignup);
 })
@@ -200,7 +200,7 @@ let editProfileModal = $("#editProfileModal")
 let editProfileModalForm = $("#editProfileModal form")
 let editProfileButton = $("#edit-profile")
 
-editProfileButton.addEventListener("click",(e)=>{
+editProfileButton?.addEventListener("click",(e)=>{
    e.preventDefault();
    flex(editProfileModal);
 
@@ -212,7 +212,7 @@ let shareProfileModal =  $("#shareProfileModal")
 let shareProfileBtn =  $("#share-my-profile")
 let closeShareMyProfileBtn = $("#close-my-profile-btn")
 
-shareProfileBtn.addEventListener("click",(e)=>{
+shareProfileBtn?.addEventListener("click",(e)=>{
    e.preventDefault();
    flex(shareProfileModal);
 })
@@ -231,7 +231,7 @@ createCommentBtn?.addEventListener("click",(e)=>{
 
 // list of comments
 $all(".show-comments-btn").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
+    btn?.addEventListener("click", (e) => {
         const article = btn.closest("article");
         const commentsList = article.querySelector(".comments-list");
         const isHidden = commentsList.classList.contains("hidden");
@@ -246,7 +246,7 @@ const previewBtn = $("#previewBtn");
 const discussionText = $("#discussionText");
 const discussionPreview = $("#discussionPreview");
 
-previewBtn.addEventListener("click", () => {
+previewBtn?.addEventListener("click", () => {
         const content = discussionText.value.trim();
         if(content.length === 0){
             discussionPreview.classList.add("hidden");
@@ -259,3 +259,17 @@ previewBtn.addEventListener("click", () => {
 });
 
 
+// like and unlike
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".like-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const feedId = btn.dataset.id;
+            fetch(`/feeds/like/${feedId}`, { method: "POST" })
+                .then(res => res.json())
+                .then(data => {
+                    btn.querySelector(".like-count").innerText = data.likes;
+                })
+                .catch(err => console.error("Error:", err));
+        });
+    });
+});

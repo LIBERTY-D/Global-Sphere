@@ -1,26 +1,35 @@
 package com.daniel.app.global.sphere.models;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
+import lombok.*;
 
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Comment {
+@Entity
+@ToString(exclude = "user")
+public class Comment extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private  Long id;
+
     private String author;
     private String text;
-    private  String avatar;
-    private LocalDateTime createdAt;
+    private String avatar;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private  User user;
 
-    // Optional: derived field for Thymeleaf
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "feed_id",nullable = true)
+    private  FeedItem feed;
+
     public String getTimeAgo() {
-        return createdAt == null ? "just now" : createdAt.toString();
+        return this.getCreatedAt() == null ? "just now" :
+                this.getCreatedAt().toString();
     }
 }

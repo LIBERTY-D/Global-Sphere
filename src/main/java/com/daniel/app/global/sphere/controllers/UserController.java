@@ -5,106 +5,93 @@ import com.daniel.app.global.sphere.dtos.EditProfileDto;
 import com.daniel.app.global.sphere.dtos.ForgotPassword;
 import com.daniel.app.global.sphere.dtos.SignIn;
 import com.daniel.app.global.sphere.dtos.SignUp;
-import com.daniel.app.global.sphere.models.FeedItem;
+import com.daniel.app.global.sphere.exceptions.AuthException;
 import com.daniel.app.global.sphere.models.User;
-import com.daniel.app.global.sphere.services.FeedService;
 import com.daniel.app.global.sphere.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
-
     private final UserService userService;
-    private final FeedService feedService;
-
-
-
-    @RequestMapping(value = {"", "/", "home"}, method = RequestMethod.GET)
-    public String getHomePage(Model model) {
-        // Dummy logged-in user
-        User currentUser = userService.getAuthenticatedUser();
-        // Sample feed
-        List<FeedItem> feedItems = feedService.getFeeds();
-
-        // Add attributes to the model
-        model.addAttribute("feed", feedItems);
-        model.addAttribute("currentUser", currentUser);
-
-        return "home";
-    }
 
     @PostMapping(value = "/register")
-
-    public  String registerUser(@Valid @ModelAttribute("signUpForm") SignUp signUp, BindingResult bindingResult, Model model){
-        if(bindingResult.hasErrors()){
-            System.out.println(bindingResult.getAllErrors());
-            model.addAttribute("showPasswordSignUpModal",true);
+    public String registerUser(@Valid @ModelAttribute("signUpForm") SignUp signUp, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("showPasswordSignUpModal", true);
             return "home";
         }
+        try {
+            userService.registerUser(signUp);
+        } catch (DataIntegrityViolationException exp) {
+            bindingResult.rejectValue("email", "error.signinForm", "email " + "taken");
+            model.addAttribute("showPasswordSignUpModal", true);
+            return "home";
 
-//        TODO: register user
-        userService.registerUser(signUp);
-        System.out.println(signUp);
+        }
 
-        model.addAttribute("showPasswordSignUpModal",false);
-        return  "home";
+        model.addAttribute("showPasswordSignUpModal", false);
+        return "redirect:/home";
 
     }
 
-    @PostMapping(value = "/signin")
-    public String signInUser(@Valid @ModelAttribute("signinForm") SignIn signIn,
-                             BindingResult bindingResult,
-                             Model model) {
-        if (bindingResult.hasErrors()) {
+    @PostMapping("/signin")
+    public String signInUser(@Valid @ModelAttribute("signinForm") SignIn signIn, BindingResult bindingResult, Model model, HttpServletRequest request) {
+
+        try {
+            User user = userService.authenticate(signIn);
+
+            Authentication auth = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
+            // 1. Set authentication on the context
+            SecurityContext context = SecurityContextHolder.createEmptyContext();
+            context.setAuthentication(auth);
+            SecurityContextHolder.setContext(context);
+            // 2. Store context in the session (so Spring Security can retrieve it later)
+            HttpSession session = request.getSession(true);
+            session.setAttribute("SPRING_SECURITY_CONTEXT", context);
+            model.addAttribute("showSignInModal", false);
+
+        } catch (AuthException e) {
+            bindingResult.rejectValue(e.getField(), "error.signinForm", e.getMessage());
             model.addAttribute("showSignInModal", true);
             return "home";
         }
-
-        // TODO: LOGIN USER
-        userService.loginUser(signIn);
-        model.addAttribute("showSignInModal", false);
-        return "home";
+        return "redirect:/home";
     }
 
-
     @PostMapping(value = "/forgot-password")
-    public String forgotPassword(@Valid @ModelAttribute("forgotForm") ForgotPassword forgot,
-                                 BindingResult bindingResult,
-                                 Model model) {
+    public String forgotPassword(@Valid @ModelAttribute("forgotForm") ForgotPassword forgot, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            System.out.println(bindingResult.getAllErrors());
             model.addAttribute("showPasswordForgotModal", true);
             return "home";
         }
-
-        System.out.println(forgot);
         model.addAttribute("showPasswordForgotModal", false);
         return "home";
     }
 
     @PostMapping("/profile/edit")
-    public String editProfile(
-            @Valid @ModelAttribute("editProfileForm") EditProfileDto editProfileDto,
-            BindingResult bindingResult,
-            Model model) {
+    public String editProfile(@Valid @ModelAttribute("editProfileForm") EditProfileDto editProfileDto, BindingResult bindingResult, Model model) {
         if (!editProfileDto.getAvatar().isEmpty()) {
             if (!editProfileDto.getAvatar().getContentType().startsWith("image/")) {
                 bindingResult.rejectValue("avatar", "avatar.invalidType", "Only image files are allowed");
             }
-//            if (editProfileDto.getAvatar().getSize() > 2 * 1024 * 1024) { // 2MB limit
-//                bindingResult.rejectValue("avatar", "avatar.size", "File size must not exceed 2MB");
-//            }
         }
 
         if (bindingResult.hasErrors()) {
@@ -112,9 +99,13 @@ public class UserController {
             return "home";
         }
 
-        // TODO: Save user profile update
-        System.out.println(editProfileDto);
+        Boolean res = userService.updateUser(editProfileDto);
+        return "redirect:/home";
+    }
 
+    @GetMapping("/follow")
+    public String toggleFollow(@RequestParam(value = "id", required = false) Long userId) {
+        userService.toggleFollow(userId);
         return "redirect:/home";
     }
 

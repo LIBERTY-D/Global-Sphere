@@ -1,5 +1,7 @@
 package com.daniel.app.global.sphere.dtos;
 
+
+import com.daniel.app.global.sphere.annotation.MatchFieldValueAnnotation;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,6 +13,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@MatchFieldValueAnnotation.Fields({
+        @MatchFieldValueAnnotation(message = "passwords do not match",
+                field ="password", fieldMatch = "confirmPassword")
+})
 public class SignUp {
     @NotBlank(message = "Username is required")
     private String username;
@@ -20,8 +26,9 @@ public class SignUp {
     @Size(min = 6, message = "Password must be at least 6 characters long")
     @NotNull(message = "Password is required")
     private String password;
-    @Size(min = 6, message = "Password must be at least 6 characters long")
-    @NotNull(message = "Password is required")
+    @NotNull(message = "Confirm Password is required")
+    @Size(min = 6, message = "Confirm Password must be at least 6 characters " +
+            "long")
     private String confirmPassword;
 }
 

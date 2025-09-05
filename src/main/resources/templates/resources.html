@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Resources</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+          rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -28,14 +28,12 @@
     <!-- Header: Logo + Create Button -->
     <div class="flex items-center justify-between">
         <a class="flex items-center gap-3" th:href="@{/home}">
-            <!-- Logo Circle -->
             <span class="inline-flex h-12 w-12 items-center justify-center rounded-full
                          bg-gradient-to-br from-primary-500 to-primary-700
                          text-white font-extrabold text-lg shadow-md transform transition
                          hover:scale-110">
                 GS
             </span>
-            <!-- Logo Text -->
             <span class="text-2xl font-bold text-indigo-900 drop-shadow-sm">Global Sphere</span>
         </a>
 
@@ -50,38 +48,49 @@
     <h1 class="text-2xl font-bold text-indigo-700">📚 Resources</h1>
 
     <!-- Resources grid -->
-    <div class="grid md:grid-cols-2 gap-6 mt-4">
-        <article th:each="resource : ${resources}"
-                 class="rounded-2xl border bg-white p-5 shadow-sm flex flex-col transition hover:shadow-lg">
+    <section>
+        <div class="grid md:grid-cols-2 gap-6 mt-4"
+             th:if="${!#lists.isEmpty(resources)}">
+            <article th:each="resource : ${resources}"
+                     class="rounded-2xl border bg-white p-5 shadow-sm flex flex-col transition hover:shadow-lg">
 
-            <!-- Thumbnail -->
-            <img th:if="${resource.imageUrl != null}" th:src="${resource.imageUrl}" alt="Thumbnail"
-                 class="h-40 w-full object-cover rounded-xl mb-4">
+                <!-- Thumbnail -->
+                <img th:if="${resource.imageUrl != null}"
+                     th:src="${resource.imageUrl}" alt="Thumbnail"
+                     class="h-40 w-full object-cover rounded-xl mb-4">
 
-            <!-- Title -->
-            <h2 class="text-lg font-semibold text-indigo-900 mb-1 line-clamp-2"
-                th:text="${resource.title}">Resource Title</h2>
+                <!-- Title -->
+                <h2 class="text-lg font-semibold text-indigo-900 mb-1 line-clamp-2"
+                    th:text="${resource.title}">Resource Title</h2>
 
-            <!-- Author + date -->
-            <p class="text-sm text-gray-500 mb-3">
-                By <span th:text="${resource.author}">Author</span> •
-                <span th:text="${#temporals.format(resource.publishedAt, 'MMM dd, yyyy')}">Jan 1, 2025</span>
-            </p>
+                <!-- Author + date -->
+                <p class="text-sm text-gray-500 mb-3">
+                    By <span th:text="${resource.author}">Author</span> •
+                    <span th:text="${#temporals.format(resource.createdAt, 'MMM dd, yyyy')}">Jan 1, 2025</span>
+                </p>
 
-            <!-- Short description -->
-            <p class="text-sm text-gray-700 flex-1" th:text="${#strings.abbreviate(resource.content, 140)}">
-                Resource short description or excerpt goes here...
-            </p>
+                <!-- Short description -->
+                <p class="text-sm text-gray-700 flex-1"
+                   th:text="${#strings.abbreviate(resource.content, 140)}">
+                    Resource short description or excerpt goes here...
+                </p>
 
-            <!-- View button -->
-            <div class="mt-4">
-                <a th:href="@{/resources/{id}(id=${resource.id})}"
-                   class="inline-block rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">
-                    View Resource →
-                </a>
-            </div>
-        </article>
-    </div>
+                <!-- View button -->
+                <div class="mt-4">
+                    <a th:href="@{/resources/{id}(id=${resource.id})}"
+                       class="inline-block rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">
+                        View Resource →
+                    </a>
+                </div>
+            </article>
+        </div>
+
+        <!-- Message for empty resources -->
+        <div th:if="${#lists.isEmpty(resources)}"
+             class="p-5 bg-white rounded-xl text-gray-500 text-center shadow-sm mt-4">
+            No resources available 😔
+        </div>
+    </section>
 </div>
 
 <!-- Create Resource Modal -->

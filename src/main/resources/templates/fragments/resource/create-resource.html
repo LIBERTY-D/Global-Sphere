@@ -1,36 +1,67 @@
 <div th:fragment="modal-create-resource" id="modal-create-resource"
      class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-lg w-full max-w-xl p-6 relative">
-        <h2 class="text-xl font-semibold text-indigo-900 mb-4">Create Resource</h2>
-        <form th:action="@{/resources/add}" method="post" enctype="multipart/form-data" class="space-y-4">
+        <h2 class="text-xl font-semibold text-indigo-900 mb-4">Create
+            Resource</h2>
+        <form th:action="@{/resources/add}" th:method="post"
+              enctype="multipart/form-data" th:object="${createResourceForm}"
+              class="space-y-4">
             <div>
                 <label class="block text-sm font-medium text-gray-700">Title</label>
-                <input type="text" name="title" required
+                <input type="text" th:field="*{title}" required
                        class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300">
+                <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}"
+                   class="text-red-500 text-sm mt-1"></p>
+
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Short Description</label>
-                <input type="text" name="description" required
+                <label class="block text-sm font-medium text-gray-700">Short
+                    Description</label>
+                <input type="text" th:field="*{description}"
                        class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300">
+                <p th:if="${#fields.hasErrors('description')}"
+                   th:errors="*{description}"
+                   class="text-red-500 text-sm mt-1"></p>
+
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700">Content</label>
-                <textarea name="content" rows="5"
-                          class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300"></textarea>
+                <textarea rows="5"
+                          class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300"
+                          th:field="*{content}"></textarea>
+                <p th:if="${#fields.hasErrors('content')}"
+                   th:errors="*{content}"
+                   class="text-red-500 text-sm mt-1"></p>
+
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Cover Image</label>
-                <input type="file" name="image" accept="image/*"
+                <label class="block text-sm font-medium text-gray-700">Cover
+                    Image</label>
+                <input type="file" th:field="*{imageUrl}" accept="image/*"
                        class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300">
+                <p th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}"
+                   class="text-red-500 text-sm mt-1"></p>
+
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">External Link</label>
-                <input type="url" name="externalUrl"
+                <label class="block text-sm font-medium text-gray-700">External
+                    Link</label>
+                <input type="url" th:field="*{externalUrl}"
                        class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300">
+                <p th:if="${#fields.hasErrors('externalUrl')}"
+                   th:errors="*{externalUrl}"
+                   class="text-red-500 text-sm mt-1"></p>
+
             </div>
             <div class="flex justify-end gap-2 mt-4">
-                <button type="button" class="px-4 py-2 rounded-xl border border-gray-300 hover:bg-gray-50" id="modal-create-resource-close">Cancel</button>
-                <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700">Create</button>
+                <button type="button"
+                        class="px-4 py-2 rounded-xl border border-gray-300 hover:bg-gray-50"
+                        id="modal-create-resource-close">Cancel
+                </button>
+                <button type="submit"
+                        class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700">
+                    Create
+                </button>
             </div>
         </form>
     </div>

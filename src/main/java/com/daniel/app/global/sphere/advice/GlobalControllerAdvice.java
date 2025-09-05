@@ -15,6 +15,11 @@ public class GlobalControllerAdvice {
 
     private final UserService userService;
 
+    @ModelAttribute("currentUser")
+    public User currentUser() {
+        return userService.getAuthenticatedUser();
+    }
+
     @ModelAttribute("signinForm")
     public SignIn signinForm() {
         return new SignIn();
@@ -40,9 +45,9 @@ public class GlobalControllerAdvice {
     }
 
     @ModelAttribute("createPostForm")
-    public CreatePost createPostForm() {
+    public CreateFeedDto createPostForm() {
         User currentUser = userService.getAuthenticatedUser();
-        CreatePost post = new CreatePost();
+        CreateFeedDto post = new CreateFeedDto();
         if (currentUser != null) {
             post.setAuthor(currentUser.getName());
             post.setRole(currentUser.getRole());
@@ -58,6 +63,7 @@ public class GlobalControllerAdvice {
         if (currentUser != null) {
             comment.setAuthor(currentUser.getName());
             comment.setCreatedAt(LocalDateTime.now());
+//            comment.setPostId();
         }
         return comment;
     }
@@ -70,6 +76,11 @@ public class GlobalControllerAdvice {
             discussion.setCreatedAt(LocalDateTime.now());
         }
         return discussion;
+    }
+
+    @ModelAttribute("createResourceForm")
+    public CreateResourceDto createResourceForm() {
+        return  new CreateResourceDto();
     }
 
 }

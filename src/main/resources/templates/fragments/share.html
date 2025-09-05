@@ -1,7 +1,10 @@
-<div class="rounded-2xl border bg-white p-5 shadow-sm" th:fragment="share">
+<div class="rounded-2xl border bg-white p-5 shadow-sm"
+     th:fragment="share(currentUser)">
     <div class="flex gap-3">
         <img alt="avatar"
-             class="h-10 w-10 rounded-full" src="https://i.pravatar.cc/96?img=12"/>
+             class="h-10 w-10 rounded-full"
+             th:src="${currentUser.avatar == null ? '/assets/blank.jpg' : currentUser.avatar}"/>
+
         <button class="flex-1 rounded-xl border border-gray-200 px-4 py-3 text-left text-gray-500 hover:bg-gray-50"
                 id="btn-open-create-2">
             Share what you're learning...

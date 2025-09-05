@@ -2,6 +2,7 @@ package com.daniel.app.global.sphere.config;
 
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -11,5 +12,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
 
         registry.addViewController("/about").setViewName("about");
+
     }
 }
