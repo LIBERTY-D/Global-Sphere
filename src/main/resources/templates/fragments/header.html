@@ -43,10 +43,9 @@
                 <!-- User profile / login buttons -->
                 <div th:if="${currentUser != null}"
                      class="flex items-center gap-2">
-                    <img
-                            th:src="${currentUser.avatar} ? currentUser.avatar : @{/assets/blank.jpg} "
-                            alt="Profile"
-                            class="h-9 w-9 rounded-full object-cover border-2 border-gray-300"/>
+                    <img th:src="${currentUser != null and currentUser.avatar != null} ? @{/user/image} : @{/assets/blank.jpg}"
+                         alt="Profile"
+                         class="h-9 w-9 rounded-full object-cover border-2 border-gray-300"/>
                     <span th:text="${currentUser.name}"
                           class="font-semibold text-gray-700"></span>
                     <a class="rounded-xl bg-gray-200 px-3 py-1 text-sm font-semibold hover:bg-gray-300"

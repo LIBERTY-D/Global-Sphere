@@ -1,8 +1,8 @@
 <article th:fragment="resource-card(resource)" id="resource-card"
          class="rounded-2xl border bg-white shadow-sm
          overflow-hidden">
-    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop"
-         class="h-40 w-full object-cover" alt=""/>
+    <img th:src="@{/resources/image/{id}(id=${resource.id})}"
+         class="h-40 w-full object-cover" alt="resource image"/>
     <div class="p-5">
         <h3 class="font-semibold" th:text="${resource.title}">REST APIs &
             Validation</h3>

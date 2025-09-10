@@ -31,5 +31,5 @@ public class CreateFeedDto {
     // Hidden fields filled from backend
     private String author;
     private Role role;
-    private String avatar;
+    private byte[] avatar;
 }

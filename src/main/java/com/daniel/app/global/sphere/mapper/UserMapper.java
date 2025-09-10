@@ -6,11 +6,16 @@ import com.daniel.app.global.sphere.models.Comment;
 import com.daniel.app.global.sphere.models.FeedItem;
 import com.daniel.app.global.sphere.models.User;
 
+import java.io.IOException;
+
 
 public class UserMapper {
 
-    public static User toUser(User dbUser, EditProfileDto editProfileDto) {
-        // TODO: handle avatar image properly later
+    public static User toUser(User dbUser, EditProfileDto editProfileDto) throws IOException {
+
+        if (editProfileDto.getAvatar() != null && !editProfileDto.getAvatar().isEmpty()) {
+            dbUser.setAvatar(editProfileDto.getAvatar().getBytes());
+        }
         dbUser.setName(editProfileDto.getName());
         dbUser.setOccupation(editProfileDto.getOccupation());
         dbUser.setJobTitle(editProfileDto.getJobTitle());

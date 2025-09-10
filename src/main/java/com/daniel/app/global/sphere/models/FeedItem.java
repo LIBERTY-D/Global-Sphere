@@ -21,12 +21,16 @@ public class FeedItem extends BaseEntity  {
     private Long id;
     private String author;
     private Role role;
-    private String avatar;
+    private byte [] avatar;
     private String content;
     private String codeSnippet;
     private String link;
-    private byte[] filePath;
     private int likes;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "feed_id")
+    private List<ImageEntity> images = new ArrayList<>();
+
 
     @ElementCollection
     @CollectionTable(

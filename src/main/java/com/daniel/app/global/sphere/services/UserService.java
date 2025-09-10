@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -54,6 +55,10 @@ public class UserService {
         return user;
     }
 
+    public byte[] getUserImage() {
+        return getAuthenticatedUser().getAvatar();
+    }
+
     @LogAspectAnnotation
     public boolean registerUser(SignUp signUp) {
         log.info("CREATING USER");
@@ -65,10 +70,9 @@ public class UserService {
     }
 
     @LogAspectAnnotation
-    public boolean updateUser(EditProfileDto editProfileDto) {
+    public boolean updateUser(EditProfileDto editProfileDto) throws IOException {
         User user = getAuthenticatedUser();
         User updatedUser = UserMapper.toUser(user, editProfileDto);
-
         userRepository.save(updatedUser);
         return true;
     }
@@ -104,6 +108,7 @@ public class UserService {
                     .map(u -> new Person(
                             u.getName(),
                             u.getId(),
+                            u.getAvatar(),
                             u.getJobTitle(),
                             u.getOccupation()
                     ))
@@ -112,14 +117,11 @@ public class UserService {
         return List.of();
     }
 
-
     @Transactional
     public boolean toggleFollow(Long userId) {
         User principalUser = getAuthenticatedUser();
-        User currentUser = userRepository.findByEmail(principalUser.getEmail())
-                .orElseThrow();
-        User userToFollow = userRepository.findById(userId)
-                .orElseThrow();
+        User currentUser = userRepository.findByEmail(principalUser.getEmail()).orElseThrow();
+        User userToFollow = userRepository.findById(userId).orElseThrow();
 
         if (currentUser.getFollowing().contains(userToFollow)) {
             currentUser.unfollow(userToFollow);
@@ -131,4 +133,7 @@ public class UserService {
     }
 
 
+    public User findUserImageById(Long id) {
+        return userRepository.findById(id).orElse(new User());
+    }
 }

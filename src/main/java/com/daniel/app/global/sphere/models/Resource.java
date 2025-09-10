@@ -19,7 +19,7 @@ public class Resource extends  BaseEntity {
     private String title;
     private String description;
     private String content;
-    private String imageUrl;
+    private byte[] imageUrl;
     private String externalUrl;
     private String author;
     @ManyToOne(fetch = FetchType.LAZY)

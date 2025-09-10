@@ -21,15 +21,10 @@ public class FeedMapper {
         feedItem.setContent(createPost.getContent());
         feedItem.setLink(createPost.getLink());
         feedItem.setRole(user.getRole());
-        if(createPost.getFile()!=null){
-            feedItem.setFilePath(createPost.getFile().getBytes());
-        }
         return  feedItem;
     }
 
-    public static FeedItem toCreateDiscussion(User user,
-                                       CreateDiscussion createDiscussion)  {
-
+    public static FeedItem toCreateDiscussion(User user, CreateDiscussion createDiscussion)  {
         FeedItem feedItem = new FeedItem();
         feedItem.setAuthor(user.getName());
         feedItem.setAvatar(user.getAvatar());
@@ -39,7 +34,6 @@ public class FeedMapper {
         feedItem.setContent(createDiscussion.getText());
         feedItem.setLink(null);
         feedItem.setRole(user.getRole());
-        feedItem.setFilePath(null);
         return  feedItem;
     }
 

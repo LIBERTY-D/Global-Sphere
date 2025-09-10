@@ -4,9 +4,11 @@
             <img
                     alt="Your avatar"
                     class="h-14 w-14 rounded-full"
-                    th:src="${currentUser?.avatar != null} ? @{${currentUser.avatar}} : @{/assets/blank.jpg}"/>
+                    th:src="${currentUser != null and currentUser.avatar != null} ? @{/user/image} : @{/assets/blank.jpg}"
+            />
 
             <div>
+
                 <h3 class="font-semibold"
                     th:text="${currentUser?.name ?: 'Alex Doe'}">Alex Doe</h3>
                 <p class="text-sm text-gray-500"

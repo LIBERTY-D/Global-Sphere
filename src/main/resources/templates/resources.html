@@ -56,9 +56,9 @@
 
                 <!-- Thumbnail -->
                 <img th:if="${resource.imageUrl != null}"
-                     th:src="${resource.imageUrl}" alt="Thumbnail"
+                     th:src="@{/resources/image/{id}(id=${resource.id})}"
+                     alt="Thumbnail"
                      class="h-40 w-full object-cover rounded-xl mb-4">
-
                 <!-- Title -->
                 <h2 class="text-lg font-semibold text-indigo-900 mb-1 line-clamp-2"
                     th:text="${resource.title}">Resource Title</h2>

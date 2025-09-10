@@ -5,8 +5,8 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-  main:
-    allow-circular-references: true #dev only
+#  main:
+#    allow-circular-references: true #dev only
   thymeleaf:
     cache: false
   datasource:

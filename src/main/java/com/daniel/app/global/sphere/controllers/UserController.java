@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -21,10 +22,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @Controller
 @RequiredArgsConstructor
@@ -87,10 +87,20 @@ public class UserController {
     }
 
     @PostMapping("/profile/edit")
-    public String editProfile(@Valid @ModelAttribute("editProfileForm") EditProfileDto editProfileDto, BindingResult bindingResult, Model model) {
+    public String editProfile(@Valid @ModelAttribute("editProfileForm") EditProfileDto editProfileDto, BindingResult bindingResult, Model model) throws IOException {
         if (!editProfileDto.getAvatar().isEmpty()) {
-            if (!editProfileDto.getAvatar().getContentType().startsWith("image/")) {
+            String cntType = editProfileDto.getAvatar().getContentType();
+            if (!cntType.startsWith("image/")) {
                 bindingResult.rejectValue("avatar", "avatar.invalidType", "Only image files are allowed");
+                model.addAttribute("showEditProfileModal", true);
+                return "home";
+            }
+            if (cntType.startsWith("image/svg+xml")) {
+                bindingResult.rejectValue("avatar", "avatar.invalidType",
+                        "Image type svg+xml not allowed" +
+                                " ");
+                model.addAttribute("showEditProfileModal", true);
+                return "home";
             }
         }
 
@@ -102,6 +112,21 @@ public class UserController {
         Boolean res = userService.updateUser(editProfileDto);
         return "redirect:/home";
     }
+
+    @GetMapping("/user/image")
+    @ResponseBody
+    public byte[] getAuthenticatedUserImage() {
+        return userService.getUserImage();
+    }
+
+    @GetMapping(value = "/user/{id}/avatar", produces =
+            MediaType.IMAGE_JPEG_VALUE)
+    @ResponseBody
+    public byte[] getAvatar(@PathVariable Long id) {
+        User user = userService.findUserImageById(id);
+        return user.getAvatar();
+    }
+
 
     @GetMapping("/follow")
     public String toggleFollow(@RequestParam(value = "id", required = false) Long userId) {

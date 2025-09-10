@@ -1,5 +1,6 @@
 <div th:fragment="modal-create-resource" id="modal-create-resource"
-     class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center p-4">
+     class="fixed inset-0 z-50  bg-black bg-opacity-50 flex items-center justify-center p-4"
+     th:classappend="${showCreateResourceForm == null or !showCreateResourceForm ? 'hidden' : 'flex'}">
     <div class="bg-white rounded-2xl shadow-lg w-full max-w-xl p-6 relative">
         <h2 class="text-xl font-semibold text-indigo-900 mb-4">Create
             Resource</h2>
@@ -39,7 +40,8 @@
                     Image</label>
                 <input type="file" th:field="*{imageUrl}" accept="image/*"
                        class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300">
-                <p th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}"
+                <p th:if="${#fields.hasErrors('imageUrl')}"
+                   th:errors="*{imageUrl}"
                    class="text-red-500 text-sm mt-1"></p>
 
             </div>

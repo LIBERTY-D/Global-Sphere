@@ -1,13 +1,21 @@
-
 <ul th:fragment="personList(follow)">
-    <li th:each="personToFollow : ${follow}" class="flex items-center justify-between">
+    <li th:each="personToFollow : ${follow}"
+        class="flex items-center justify-between">
         <div class="flex items-center gap-3">
-            <img alt=""
-                 class="h-10 w-10 rounded-full"
-                 src="https://i.pravatar.cc/96?img=15"/>
+            <img class="h-10 w-10 rounded-full"
+                 th:src="${personToFollow == null or personToFollow.avatar == null}
+                ? @{/assets/blank.jpg}
+                : @{/user/{id}/avatar(id=${personToFollow.userId})}"
+                 alt="User avatar"/>
+
+
             <div>
-                <div class="font-medium" th:text="${personToFollow.username}">Sara Lee</div>
-                <div class="text-xs text-gray-500" th:text="${personToFollow.occupation}">Spring • REST • JPA</div>
+                <div class="font-medium" th:text="${personToFollow.username}">
+                    Sara Lee
+                </div>
+                <div class="text-xs text-gray-500"
+                     th:text="${personToFollow.occupation}">Spring • REST • JPA
+                </div>
             </div>
         </div>
         <a class="rounded-lg border border-gray-200 px-3 py-1.5 text-sm hover:bg-gray-50"

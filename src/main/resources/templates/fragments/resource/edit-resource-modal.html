@@ -1,38 +1,67 @@
 <div th:fragment="modal-edit-resource(resource)" id="modal-edit-resource"
-     class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center p-4">
+     class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center p-4"
+     th:classapend="${showEditResourceForm == null or !showEditResourceForm ? 'hidden' : 'flex'}">
     <div class="bg-white rounded-2xl shadow-lg w-full max-w-xl p-6 relative">
-        <h2 class="text-xl font-semibold text-indigo-900 mb-4">Edit Resource</h2>
-        <form th:action="@{/resources/edit/{id}(id=${resource.id})}" method="post" enctype="multipart/form-data" class="space-y-4">
+        <h2 class="text-xl font-semibold text-indigo-900 mb-4">Edit
+            Resource</h2>
+        <form th:action="@{/resources/edit/{id}(id=${resource.id})}"
+              th:method="post" enctype="multipart/form-data"
+              class="space-y-4" th:object="${editResourceDtoForm}">
             <div>
                 <label class="block text-sm font-medium text-gray-700">Title</label>
-                <input type="text" name="title" th:value="${resource.title}" required
+                <input type="text" th:field="*{title}"
+                       th:value="${resource.title}"
+                       required
                        class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300">
+                <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}"
+                   class="text-red-500 text-sm mt-1"></p>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Short Description</label>
-                <input type="text" name="description" th:value="${resource.description}" required
+                <label class="block text-sm font-medium text-gray-700">Short
+                    Description</label>
+                <input type="text" th:field="*{description}"
+                       th:value="${resource.description}" required
                        class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300">
+                <p th:if="${#fields.hasErrors('description')}"
+                   th:errors="*{description}"
+                   class="text-red-500 text-sm mt-1"></p>
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700">Content</label>
-                <textarea name="content" rows="5" th:text="${resource.content}"
+                <textarea th:field="*{content}" rows="5"
+                          th:text="${resource.content}"
                           class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300"></textarea>
+                <p th:if="${#fields.hasErrors('content')}"
+                   th:errors="*{content}"
+                   class="text-red-500 text-sm mt-1"></p>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">Cover Image</label>
-                <input type="file" name="image" accept="image/*"
+                <label class="block text-sm font-medium text-gray-700">Cover
+                    Image</label>
+                <input type="file" th:field="*{image}" accept="image/*"
                        class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300">
-                <p class="text-xs text-gray-400 mt-1">Current image will be replaced if you upload a new one.</p>
+                <p class="text-xs text-gray-400 mt-1">Current image will be
+                    replaced if you upload a new one.</p>
+                <p th:if="${#fields.hasErrors('image')}"
+                   th:errors="*{image}"
+                   class="text-red-500 text-sm mt-1"></p>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700">External Link</label>
-                <input type="url" name="externalUrl" th:value="${resource.externalUrl}"
+                <label class="block text-sm font-medium text-gray-700">External
+                    Link</label>
+                <input type="url" th:field="*{externalUrl}"
+                       th:value="${resource.externalUrl}"
                        class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300">
             </div>
             <div class="flex justify-end gap-2 mt-4">
-                <button type="button" class="px-4 py-2 rounded-xl border border-gray-300 hover:bg-gray-50"
-                       id="modal-edit-resource-close">Cancel</button>
-                <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700">Save Changes</button>
+                <button type="button"
+                        class="px-4 py-2 rounded-xl border border-gray-300 hover:bg-gray-50"
+                        id="modal-edit-resource-close">Cancel
+                </button>
+                <button type="submit"
+                        class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700">
+                    Save Changes
+                </button>
             </div>
         </form>
     </div>

@@ -19,7 +19,7 @@ public class Comment extends BaseEntity {
 
     private String author;
     private String text;
-    private String avatar;
+    private  byte [] avatar;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private  User user;

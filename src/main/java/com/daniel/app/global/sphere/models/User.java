@@ -26,7 +26,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(unique = true)
     private String email;
     private String bio;
-    private String avatar;
+    private byte[] avatar;
     private String occupation;
     private String jobTitle;
     private String password;
@@ -68,7 +68,7 @@ public class User extends BaseEntity implements UserDetails {
     private String linkedInUrl;
     private String githubUrl;
 
-    public User(String name, String bio, String avatar,
+    public User(String name, String bio, byte[] avatar,
                 String occupation, Role role) {
         this.name = name;
         this.bio = bio;
@@ -88,7 +88,7 @@ public class User extends BaseEntity implements UserDetails {
      */
     public void updateUser(String name,
                            String bio,
-                           String avatar,
+                           byte[] avatar,
                            String occupation,
                            String jobTitle,
                            String linkedInUrl,

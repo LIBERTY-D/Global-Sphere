@@ -7,7 +7,9 @@ import com.daniel.app.global.sphere.dtos.CreateFeedDto;
 import com.daniel.app.global.sphere.dtos.UpdateFeedDto;
 import com.daniel.app.global.sphere.exceptions.FileHandlerException;
 import com.daniel.app.global.sphere.models.FeedItem;
+import com.daniel.app.global.sphere.models.ImageEntity;
 import com.daniel.app.global.sphere.models.User;
+import com.daniel.app.global.sphere.repository.ImageRepository;
 import com.daniel.app.global.sphere.services.FeedService;
 import com.daniel.app.global.sphere.services.UserService;
 import jakarta.validation.Valid;
@@ -29,6 +31,7 @@ public class FeedController {
 
     private final FeedService feedService;
     private final UserService userService;
+    private final ImageRepository imageRepository;
 
     @PostMapping("/create-feed")
     public String createFeed(@Valid @ModelAttribute("createPostForm") CreateFeedDto createFeedDto,
@@ -40,7 +43,7 @@ public class FeedController {
             return "home";
         }
         try {
-            feedService.createPost(createFeedDto);
+            feedService.createFeed(createFeedDto);
         } catch (FileHandlerException fileHandlerException) {
             System.out.println(fileHandlerException.getMessage());
         }
@@ -65,18 +68,18 @@ public class FeedController {
 
     @GetMapping("/feeds/edit/{id}")
     public String editFeed(@PathVariable Long id, Model model) {
-        FeedItem post = feedService.getPostById(id);
+        FeedItem feed = feedService.getFeedById(id);
         User currentUser = userService.getAuthenticatedUser();
-        if (!post.getUser().getId().equals(currentUser.getId())) {
+        if (!feed.getUser().getId().equals(currentUser.getId())) {
             throw new AccessDeniedException("You can only edit your own posts.");
         }
 
         UpdateFeedDto updateFeedDto = new UpdateFeedDto(
-                post.getContent(),
-                post.getCodeSnippet(),
-                post.getLink()
+                feed.getContent(),
+                feed.getCodeSnippet(),
+                feed.getLink()
         );
-        model.addAttribute("post", post);
+        model.addAttribute("post", feed);
         model.addAttribute("updateFeedDto", updateFeedDto);
 
         return "edit-feed";
@@ -99,13 +102,13 @@ public class FeedController {
             Model model) {
 
         User currentUser = userService.getAuthenticatedUser();
-        FeedItem post = feedService.getPostById(id);
+        FeedItem feed = feedService.getFeedById(id);
 
-        if (!post.getUser().getId().equals(currentUser.getId())) {
+        if (!feed.getUser().getId().equals(currentUser.getId())) {
             throw new AccessDeniedException("You can only edit your own posts.");
         }
         if (bindingResult.hasErrors()) {
-            model.addAttribute("post", post);
+            model.addAttribute("post", feed);
             return "edit-feed";
         }
 
@@ -143,4 +146,12 @@ public class FeedController {
         model.addAttribute("showDiscussionModal", false);
         return new ModelAndView("redirect:/home");
     }
+
+    @GetMapping("/feeds/image/{id}")
+    @ResponseBody
+    public byte[] getFeedImage(@PathVariable Long id) {
+        ImageEntity image = imageRepository.findById(id).orElseThrow();
+        return image.getData();
+    }
+
 }

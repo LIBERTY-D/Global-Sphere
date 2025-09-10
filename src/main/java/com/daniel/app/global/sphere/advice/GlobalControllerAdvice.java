@@ -21,7 +21,7 @@ public class GlobalControllerAdvice {
     }
 
     @ModelAttribute("signinForm")
-    public SignIn signinForm() {
+    public SignIn signInForm() {
         return new SignIn();
     }
 
@@ -81,6 +81,11 @@ public class GlobalControllerAdvice {
     @ModelAttribute("createResourceForm")
     public CreateResourceDto createResourceForm() {
         return  new CreateResourceDto();
+    }
+
+    @ModelAttribute("editResourceDtoForm")
+    public EditResourceDto editResourceDtoForm() {
+        return  new EditResourceDto();
     }
 
 }
