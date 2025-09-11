@@ -5,7 +5,7 @@
         <img alt="avatar" class="h-10 w-10 rounded-full flex-shrink-0"
              th:src="${article.user == null or article.user.avatar == null}
                 ? @{/assets/blank.jpg}
-                : @{/user/{id}/avatar(id=${article.user.id})}" />
+                : @{/user/{id}/avatar(id=${article.user.id})}"/>
 
 
         <!-- Content -->
@@ -26,11 +26,10 @@
 
             <!-- Code Snippet -->
             <pre class="mt-3 overflow-x-auto rounded-xl bg-gray-900 p-4 text-xs text-gray-100 max-w-full"
-                 th:if="${article.codeSnippet != null}">
-                <code class="whitespace-pre"
-                      th:text="${#strings.trim(article.codeSnippet)}">// code snippet</code>
+                 th:if="${article.codeSnippet != null and #strings.trim(article.codeSnippet) != ''}">
+                <code class="whitespace-pre" th:text="${#strings.trim(article.codeSnippet)}">// code snippet</code>
             </pre>
-            <!-- Images Section -->
+
             <!-- Images Section -->
             <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"
                  th:if="${article.images != null and !article.images.isEmpty()}">

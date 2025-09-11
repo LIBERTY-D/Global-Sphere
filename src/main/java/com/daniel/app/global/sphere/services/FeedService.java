@@ -129,8 +129,7 @@ public class FeedService {
     @Transactional
     @LogAspectAnnotation
     public void deletePost(Long postId, User currentUser) {
-        FeedItem feed =
-                feedRepository.findById(postId).orElseThrow(() -> new RuntimeException("Feed not found"));
+        FeedItem feed = feedRepository.findById(postId).orElseThrow(() -> new RuntimeException("Feed not found"));
         if (!feed.getUser().getId().equals(currentUser.getId())) {
             throw new AccessDeniedException("You can only delete your own posts");
         }
