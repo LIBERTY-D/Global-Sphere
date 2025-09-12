@@ -5,6 +5,7 @@ import com.daniel.app.global.sphere.Utils.CreatedAtComparator;
 import com.daniel.app.global.sphere.annotation.LogAspectAnnotation;
 import com.daniel.app.global.sphere.dtos.CreateResourceDto;
 import com.daniel.app.global.sphere.dtos.EditResourceDto;
+import com.daniel.app.global.sphere.exceptions.DataIntegrityCreateResourceException;
 import com.daniel.app.global.sphere.exceptions.FileHandlerException;
 import com.daniel.app.global.sphere.models.Resource;
 import com.daniel.app.global.sphere.models.User;
@@ -12,6 +13,7 @@ import com.daniel.app.global.sphere.repository.ResourceRepository;
 import com.daniel.app.global.sphere.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,7 +53,13 @@ public class ResourceService {
         Resource newResource = getResource(createResourceDto, user);
         user.getResources().add(newResource);
         user.incrementPostsCount();
-        userRepository.save(user);
+        try{
+            userRepository.save(user);
+            userRepository.flush();
+        }catch (DataIntegrityViolationException exp){
+            throw new DataIntegrityCreateResourceException("Resource field too long", createResourceDto);
+        }
+
         return true;
     }
 

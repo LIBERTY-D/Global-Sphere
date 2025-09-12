@@ -88,7 +88,7 @@ public class ResourceController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("showEditResourceForm", true);
-           return   "redirect:/resources/" + id;
+            return "redirect:/resources/" + id;
         }
 
         var resourceImg = dto.getImage();

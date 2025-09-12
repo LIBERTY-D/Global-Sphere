@@ -32,7 +32,10 @@
                           th:field="*{content}"></textarea>
                 <p th:if="${#fields.hasErrors('content')}"
                    th:errors="*{content}"
-                   class="text-red-500 text-sm mt-1"></p>
+                   class="text-red-500 text-sm mt-1">
+                </p>
+                <p th:if="${errorMessage}" class="text-red-500 text-sm mt-1" th:text="${errorMessage}">
+                </p>
 
             </div>
             <div>
