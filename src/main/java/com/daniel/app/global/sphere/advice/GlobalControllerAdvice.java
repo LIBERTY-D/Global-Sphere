@@ -83,9 +83,5 @@ public class GlobalControllerAdvice {
         return  new CreateResourceDto();
     }
 
-    @ModelAttribute("editResourceDtoForm")
-    public EditResourceDto editResourceDtoForm() {
-        return  new EditResourceDto();
-    }
 
 }

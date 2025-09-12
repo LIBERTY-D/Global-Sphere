@@ -21,7 +21,6 @@ let modalEditResourceClose  =$("#modal-edit-resource-close")
 let  modalEditResourceOpenBtn =   $("#modal-edit-resource-btn")
 
 modalEditResourceOpenBtn?.addEventListener("click",(e)=>{
-console.log("hello world")
    e.preventDefault()
    flex(modalEditResource)
 })

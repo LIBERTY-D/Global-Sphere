@@ -18,6 +18,8 @@ public class Resource extends  BaseEntity {
     private  Long authorId;
     private String title;
     private String description;
+
+    @Column(length = 7000)
     private String content;
     private byte[] imageUrl;
     private String externalUrl;

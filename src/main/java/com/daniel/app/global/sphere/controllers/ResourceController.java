@@ -9,16 +9,21 @@ import com.daniel.app.global.sphere.services.ResourceService;
 import com.daniel.app.global.sphere.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/resources")
 @RequiredArgsConstructor
 public class ResourceController {
 
+    private static final Logger log = LoggerFactory.getLogger(ResourceController.class);
+    public static final String ORG_SPRINGFRAMEWORK_VALIDATION_BINDING_RESULT_EDIT_RESOURCE_DTO_FORM = "org.springframework.validation.BindingResult.editResourceDtoForm";
     private final UserService userService;
     private final ResourceService resourceService;
 
@@ -33,19 +38,26 @@ public class ResourceController {
 
     @GetMapping("/{id}")
     public String viewResource(@PathVariable Long id, Model model) {
-        User currentUser = userService.getAuthenticatedUser();
+        Resource resource = resourceService.getResources().stream()
+                .filter(r -> r.getId().equals(id))
+                .findFirst()
+                .orElse(null);
 
-        Resource resource = resourceService.getResources().stream().filter(r -> r.getId().equals(id)).findFirst().orElse(null);
-
-        if (resource == null) {
-            return "error/404";
+        if (resource == null) return "error/404";
+        if (!model.containsAttribute("editResourceDtoForm")) {
+            EditResourceDto dto = new EditResourceDto();
+            dto.setTitle(resource.getTitle());
+            dto.setDescription(resource.getDescription());
+            dto.setContent(resource.getContent());
+            dto.setExternalUrl(resource.getExternalUrl());
+            model.addAttribute("editResourceDtoForm", dto);
         }
 
-        showEditForm(id, model);
         model.addAttribute("resource", resource);
-        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("currentUser", userService.getAuthenticatedUser());
         return "resource";
     }
+
 
     @PostMapping("/add")
     public String createResource(@Valid @ModelAttribute("createResourceForm") CreateResourceDto resource, BindingResult bindingResult, Model model) throws FileHandlerException {
@@ -72,40 +84,39 @@ public class ResourceController {
         return "redirect:/resources";
     }
 
-
-    private void showEditForm(@PathVariable Long id, Model model) {
-        var resource = resourceService.getResourceById(id);
-        model.addAttribute("editResourceDtoForm", resource);
-        model.addAttribute("showEditResourceForm", true);
-
-    }
-
     @PostMapping("/edit/{id}")
-    public String editResource(@PathVariable Long id,
-                               @ModelAttribute("editResourceDtoForm") EditResourceDto dto,
-                               BindingResult bindingResult,
-                               Model model) throws FileHandlerException {
+    public String editResource(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("editResourceDtoForm") EditResourceDto dto,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) throws FileHandlerException {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("showEditResourceForm", true);
+            redirectAttributes.addFlashAttribute(ORG_SPRINGFRAMEWORK_VALIDATION_BINDING_RESULT_EDIT_RESOURCE_DTO_FORM, bindingResult);
+            redirectAttributes.addFlashAttribute("editResourceDtoForm", dto);
+            redirectAttributes.addFlashAttribute("showEditResourceForm", true);
             return "redirect:/resources/" + id;
         }
 
         var resourceImg = dto.getImage();
         if (resourceImg.isEmpty()) {
-            bindingResult.rejectValue("image", "editResource.image", "image is required");
-            model.addAttribute("showEditResourceForm", true);
+            bindingResult.rejectValue("image", "editResource.image", "Image is required");
+            redirectAttributes.addFlashAttribute(ORG_SPRINGFRAMEWORK_VALIDATION_BINDING_RESULT_EDIT_RESOURCE_DTO_FORM, bindingResult);
+            redirectAttributes.addFlashAttribute("editResourceDtoForm", dto);
+            redirectAttributes.addFlashAttribute("showEditResourceForm", true);
             return "redirect:/resources/" + id;
         }
 
-        var cntType = dto.getImage().getContentType();
+        var cntType = resourceImg.getContentType();
         if (cntType.startsWith("image/svg+xml")) {
             bindingResult.rejectValue("image", "editResource.invalidType", "SVG images not allowed");
-            model.addAttribute("showEditResourceForm", true);
+            redirectAttributes.addFlashAttribute(ORG_SPRINGFRAMEWORK_VALIDATION_BINDING_RESULT_EDIT_RESOURCE_DTO_FORM, bindingResult);
+            redirectAttributes.addFlashAttribute("editResourceDtoForm", dto);
+            redirectAttributes.addFlashAttribute("showEditResourceForm", true);
             return "redirect:/resources/" + id;
         }
-        model.addAttribute("showEditResourceForm", false);
         resourceService.updateResource(id, dto);
+
         return "redirect:/resources/" + id;
     }
 

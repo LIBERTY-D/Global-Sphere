@@ -56,10 +56,15 @@
             <div th:if="${currentUser?.id == resource.authorId}"
                  class="flex gap-2">
                 <!-- Edit modal trigger -->
-                <button class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition"
-                        id="modal-edit-resource-btn">
-                    Edit
-                </button>
+
+                <form th:action="@{/resources/{id}(id=${resource.id})}"
+                      method="get" class="inline">
+                    <button type="submit"
+                            class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition"
+                            id="modal-edit-resource-btn">
+                        Edit
+                    </button>
+                </form>
 
                 <!-- Delete form -->
                 <form th:action="@{/resources/delete/{id}(id=${resource.id})}"
@@ -81,10 +86,9 @@
         </p>
 
         <!-- Resource content -->
-        <article class="prose max-w-none text-gray-700 mb-8">
+        <article class="prose max-w-full text-gray-700 mb-8 break-words">
             <p th:text="${resource.content}">
-                Full resource content goes here... It can be long, with
-                explanations, code, or links.
+                Full resource content goes here... It can be long, with explanations, code, or links.
             </p>
         </article>
 
