@@ -6,6 +6,7 @@ import com.daniel.app.global.sphere.annotation.LogAspectAnnotation;
 import com.daniel.app.global.sphere.dtos.CreateComment;
 import com.daniel.app.global.sphere.dtos.CreateDiscussion;
 import com.daniel.app.global.sphere.dtos.CreateFeedDto;
+import com.daniel.app.global.sphere.dtos.UpdateFeedDto;
 import com.daniel.app.global.sphere.exceptions.DataIntegrityException;
 import com.daniel.app.global.sphere.exceptions.FileHandlerException;
 import com.daniel.app.global.sphere.mapper.FeedMapper;
@@ -18,7 +19,6 @@ import com.daniel.app.global.sphere.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -119,25 +119,26 @@ public class FeedService {
 
     @Transactional
     @LogAspectAnnotation
-    public FeedItem updateFeed(Long postId, User currentUser, String content,
-                               String codeSnippet, String link) {
-        FeedItem feed = feedRepository.findById(postId).orElseThrow(() -> new RuntimeException("Feed not found"));
-        if (!feed.getUser().getId().equals(currentUser.getId())) {
-            throw new AccessDeniedException("You can only edit your own posts");
-        }
-        feed.setContent(content);
-        feed.setCodeSnippet(codeSnippet);
-        feed.setLink(link);
+    public FeedItem updateFeed(Long postId, User currentUser, UpdateFeedDto updateFeedDto) throws IOException {
+        FeedItem feed = feedRepository.findById(postId).orElse(new FeedItem());
+        feed.setContent(updateFeedDto.getContent());
+        feed.setCodeSnippet(updateFeedDto.getCodeSnippet());
+        feed.setLink(updateFeedDto.getLink());
+        feed.getImages().clear();
+        MultipartFile file = updateFeedDto.getFile();
+        ImageEntity image = ImageEntity.builder()
+                .name(file.getOriginalFilename())
+                .type(file.getContentType())
+                .data(file.getBytes())
+                .build();
+        feed.getImages().add(image);
         return feed;
     }
 
     @Transactional
     @LogAspectAnnotation
     public void deletePost(Long postId, User currentUser) {
-        FeedItem feed = feedRepository.findById(postId).orElseThrow(() -> new RuntimeException("Feed not found"));
-        if (!feed.getUser().getId().equals(currentUser.getId())) {
-            throw new AccessDeniedException("You can only delete your own posts");
-        }
+        FeedItem feed = feedRepository.findById(postId).orElse(new FeedItem());
         feed.getUser().decrementPostsCount();
         feedRepository.delete(feed);
     }
@@ -148,9 +149,7 @@ public class FeedService {
 
     @Transactional
     public FeedItem toggleLikeFeed(Long id) {
-        FeedItem feedItem = feedRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No such feed to toggle"));
-
+        FeedItem feedItem = feedRepository.findById(id).orElse(new FeedItem());
         User currentUser = userService.getAuthenticatedUser();
         Long userId = currentUser.getId();
 

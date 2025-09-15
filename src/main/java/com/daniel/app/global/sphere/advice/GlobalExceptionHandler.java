@@ -47,9 +47,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public String handleException(Exception ex, Model model) {
+        log.error("OVERALL EXCEPTION: {}", ex.getMessage());
         model.addAttribute("status", 500);
         model.addAttribute("error", ex.getMessage() != null ? ex.getMessage() : "Unexpected error");
-        System.out.println(ex.getMessage());
         return "error";
     }
 

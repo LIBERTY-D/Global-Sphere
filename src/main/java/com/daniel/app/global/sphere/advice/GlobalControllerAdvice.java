@@ -63,7 +63,6 @@ public class GlobalControllerAdvice {
         if (currentUser != null) {
             comment.setAuthor(currentUser.getName());
             comment.setCreatedAt(LocalDateTime.now());
-//            comment.setPostId();
         }
         return comment;
     }

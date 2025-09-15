@@ -14,13 +14,14 @@ import com.daniel.app.global.sphere.services.FeedService;
 import com.daniel.app.global.sphere.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,27 +37,45 @@ public class FeedController {
     @PostMapping("/create-feed")
     public String createFeed(@Valid @ModelAttribute("createFeedForm") CreateFeedDto createFeedDto, BindingResult bindingResult, Model model) {
 
+        if (!createFeedDto.getFile().isEmpty()) {
+            String cntType = createFeedDto.getFile().getContentType();
+            if (!cntType.startsWith("image/")) {
+                bindingResult.rejectValue("file", "avatar.invalidType", "Only" +
+                        " image files are allowed");
+                model.addAttribute("showCreatePostModal", true);
+                return "home";
+            }
+            if (cntType.startsWith("image/svg+xml")) {
+                bindingResult.rejectValue("file", "avatar.invalidType", "Image type svg+xml not allowed");
+                model.addAttribute("showCreatePostModal", true);
+                return "home";
+            }
+        }
+
         if (bindingResult.hasErrors()) {
-            System.out.println(bindingResult.getAllErrors());
             model.addAttribute("showCreatePostModal", true);
             return "home";
         }
         try {
             feedService.createFeed(createFeedDto);
         } catch (FileHandlerException fileHandlerException) {
-            System.out.println(fileHandlerException.getMessage());
+            bindingResult.rejectValue("file", "something wrong with your " +
+                    "image");
+            model.addAttribute("showCreatePostModal", true);
+            return "home";
         }
 
         return "redirect:/home";
     }
 
     @PostMapping("/comments/add")
-    public String createComment(@Valid @ModelAttribute("createCommentForm") CreateComment createComment, BindingResult bindingResult, Model model) {
+    public String createComment(@Valid @ModelAttribute("createCommentForm") CreateComment createComment, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("showCommentModal", true);
-            return "home";
+            redirectAttributes.addFlashAttribute(BindingResult.MODEL_KEY_PREFIX + "createCommentForm", bindingResult);
+            redirectAttributes.addFlashAttribute("createCommentForm", createComment);
+            redirectAttributes.addFlashAttribute("showCommentModal", true);
+            return "redirect:/home";
         }
-
         feedService.createComment(createComment);
         model.addAttribute("showCommentModal", false);
         return "redirect:/home";
@@ -65,16 +84,13 @@ public class FeedController {
     @GetMapping("/feeds/edit/{id}")
     public String editFeed(@PathVariable Long id, Model model) {
         FeedItem feed = feedService.getFeedById(id);
-        User currentUser = userService.getAuthenticatedUser();
-        if (!feed.getUser().getId().equals(currentUser.getId())) {
-            throw new AccessDeniedException("You can only edit your own posts.");
-        }
 
-        UpdateFeedDto updateFeedDto = new UpdateFeedDto(
-                feed.getContent(),
-                feed.getCodeSnippet(),
-                feed.getLink()
-        );
+        UpdateFeedDto updateFeedDto = new UpdateFeedDto();
+        updateFeedDto.setFile(null);
+        updateFeedDto.setLink(feed.getLink());
+        updateFeedDto.setCodeSnippet(feed.getCodeSnippet());
+        updateFeedDto.setContent(feed.getContent());
+
         model.addAttribute("post", feed);
         model.addAttribute("updateFeedDto", updateFeedDto);
 
@@ -91,30 +107,34 @@ public class FeedController {
     }
 
     @PostMapping("/feeds/edit/{id}")
-    public String updateFeed(
-            @PathVariable Long id,
-            @Valid @ModelAttribute("updateFeedDto") UpdateFeedDto updateFeedDto,
-            BindingResult bindingResult,
-            Model model) {
-
+    public String updateFeed(@PathVariable Long id, @Valid @ModelAttribute("updateFeedDto") UpdateFeedDto updateFeedDto, BindingResult bindingResult, Model model) {
         User currentUser = userService.getAuthenticatedUser();
         FeedItem feed = feedService.getFeedById(id);
-
-        if (!feed.getUser().getId().equals(currentUser.getId())) {
-            throw new AccessDeniedException("You can only edit your own posts.");
+        if (!updateFeedDto.getFile().isEmpty()) {
+            String cntType = updateFeedDto.getFile().getContentType();
+            if (!cntType.startsWith("image/")) {
+                bindingResult.rejectValue("file", "avatar.invalidType", "Only" + " image files are allowed");
+                model.addAttribute("post", feed);
+                return "edit-feed";
+            }
+            if (cntType.startsWith("image/svg+xml")) {
+                model.addAttribute("post", feed);
+                bindingResult.rejectValue("file", "avatar.invalidType", "Image type svg+xml not allowed");
+                return "edit-feed";
+            }
         }
         if (bindingResult.hasErrors()) {
             model.addAttribute("post", feed);
             return "edit-feed";
         }
-
-        feedService.updateFeed(
-                id,
-                currentUser,
-                updateFeedDto.getContent(),
-                updateFeedDto.getCodeSnippet(),
-                updateFeedDto.getLink()
-        );
+        try {
+            model.addAttribute("post", feed);
+            feedService.updateFeed(id, currentUser, updateFeedDto);
+        } catch (IOException exp) {
+            model.addAttribute("post", feed);
+            bindingResult.rejectValue("file", "something wrong with your image");
+            return "edit-feed";
+        }
         return "redirect:/home";
     }
 
