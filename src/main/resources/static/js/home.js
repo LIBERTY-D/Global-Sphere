@@ -76,3 +76,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // File upload trigger
 $("#uploadFileBtn")?.addEventListener("click", () => $("#fileInput").click());
+
+
+// comments
+
+const commentsBtn =  $('.show-comments-btn')
+const commentList =  $(".comments-list")
+
+commentsBtn?.addEventListener("click",()=>{
+   toggle(commentList, commentList.classList.contains("hidden"))
+})
+
+
+// share
+const createPostBtn =  $("#btn-open-create-2")
+
+createPostBtn?.addEventListener("click",()=>{
+   flex($("#modal-create"))
+})
+
+//search input
+  const searchInput = $("#searchInput");
+  const searchBtn = $("#searchBtn");
+  searchInput.addEventListener("input", () => {
+        searchBtn.disabled = ! searchInput.value.trim();
+   });
