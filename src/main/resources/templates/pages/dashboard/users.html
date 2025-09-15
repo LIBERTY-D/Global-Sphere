@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Manage Users</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <h1 class="text-2xl font-bold text-gray-700 mb-6">Manage Users</h1>
+
+    <div class="overflow-x-auto bg-white shadow rounded-2xl">
+        <table class="min-w-full text-sm text-left text-gray-700">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+<!--            <tbody>-->
+<!--            <tr th:each="comment : ${comments}"-->
+<!--                class="border-b hover:bg-gray-50">-->
+<!--                <td class="px-6 py-3" th:text="${comment.id}"></td>-->
+<!--                <td class="px-6 py-3" th:text="${comment.author}"></td>-->
+<!--                <td class="px-6 py-3" th:text="${comment.content}"></td>-->
+<!--                <td class="px-6 py-3 flex gap-2">-->
+<!--                    <a th:href="@{'/dashboard/comments/edit/' + ${comment.id}}"-->
+<!--                       class="px-3 py-1 bg-blue-500 text-white rounded">Edit</a>-->
+<!--                    <a th:href="@{'/dashboard/comments/delete/' + ${comment.id}}"-->
+<!--                       class="px-3 py-1 bg-red-500 text-white rounded"-->
+<!--                       onclick="return confirm('Delete this comment?')">Delete</a>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

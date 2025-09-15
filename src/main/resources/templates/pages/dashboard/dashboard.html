@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <h1 class="text-3xl font-bold text-gray-700 mb-8">Admin Dashboard</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <a th:href="@{/dashboard/comments}" class="bg-white rounded-2xl shadow p-6 hover:shadow-lg transition block">
+            <h2 class="text-sm font-medium text-gray-500">Comments</h2>
+            <p class="mt-4 text-3xl font-bold text-gray-900" th:text="${commentCount}">0</p>
+        </a>
+
+        <a th:href="@{/dashboard/resources}" class="bg-white rounded-2xl shadow p-6 hover:shadow-lg transition block">
+            <h2 class="text-sm font-medium text-gray-500">Resources</h2>
+            <p class="mt-4 text-3xl font-bold text-gray-900" th:text="${resourceCount}">0</p>
+        </a>
+
+        <a th:href="@{/dashboard/feeds}" class="bg-white rounded-2xl shadow p-6 hover:shadow-lg transition block">
+            <h2 class="text-sm font-medium text-gray-500">Feeds</h2>
+            <p class="mt-4 text-3xl font-bold text-gray-900" th:text="${feedCount}">0</p>
+        </a>
+
+        <a th:href="@{/dashboard/users}" class="bg-white rounded-2xl shadow p-6 hover:shadow-lg transition block">
+            <h2 class="text-sm font-medium text-gray-500">Users</h2>
+            <p class="mt-4 text-3xl font-bold text-gray-900" th:text="${userCount}">0</p>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>
