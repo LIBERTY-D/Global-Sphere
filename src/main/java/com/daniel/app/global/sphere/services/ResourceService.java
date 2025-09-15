@@ -85,27 +85,6 @@ public class ResourceService {
         return createResource;
     }
 
-    private static Resource getResource(EditResourceDto editResourceDto,
-                                        User user) {
-        Resource createResource = new Resource();
-        createResource.setAuthor(user.getName());
-        createResource.setAuthorId(user.getId());
-        createResource.setTitle(editResourceDto.getTitle());
-        createResource.setExternalUrl(CommonUtil.checkLinkValidation(editResourceDto.getExternalUrl(), editResourceDto));
-        createResource.setContent(editResourceDto.getContent());
-        MultipartFile file = editResourceDto.getImage();
-        if (file != null && !file.isEmpty()) {
-            try {
-                createResource.setImageUrl(file.getBytes());
-            } catch (IOException ioException) {
-                throw new FileHandlerException("imageUrl", ioException.getMessage());
-            }
-        }
-        createResource.setDescription(editResourceDto.getDescription());
-        createResource.setUser(user);
-        return createResource;
-    }
-
     public byte[] resourceImage(Long resourceId) {
         var resource = repository.findById(resourceId).orElse(new Resource());
         return resource.getImageUrl();

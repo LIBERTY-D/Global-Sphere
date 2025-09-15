@@ -135,4 +135,8 @@ public class UserService {
     public User findUserImageById(Long id) {
         return userRepository.findById(id).orElse(new User());
     }
+
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
+    }
 }

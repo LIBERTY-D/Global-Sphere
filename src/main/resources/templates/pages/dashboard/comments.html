@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Comments Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+<main class="p-6 max-w-7xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6">Manage Comments</h1>
+
+    <div class="overflow-x-auto bg-white shadow-md rounded-xl">
+        <table class="min-w-full border border-gray-200">
+            <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">ID</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Author</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Text</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Feed</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Created At</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+            <tr th:each="comment : ${comments}">
+                <td class="px-6 py-3 text-sm text-gray-700" th:text="${comment.id}"></td>
+                <td class="px-6 py-3 text-sm text-gray-700" th:text="${comment.author}"></td>
+                <td class="px-6 py-3 text-sm text-gray-700 max-w-xs truncate"
+                    th:text="${comment.text}"></td>
+                <td class="px-6 py-3 text-sm text-gray-700"
+                    th:text="${comment.feed != null ? comment.feed.id : 'N/A'}"></td>
+                <td class="px-6 py-3 text-sm text-gray-700" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                <td class="px-6 py-3 text-sm text-gray-700 flex gap-2">
+                    <a th:href="@{'/comments/edit/' + ${comment.id}}"
+                       class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Edit</a>
+                    <a th:href="@{'comments/delete/' + ${comment.id}}"
+                       class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                       onclick="return confirm('Are you sure you want to delete this comment?');">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+</body>
+</html>
