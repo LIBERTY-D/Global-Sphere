@@ -67,6 +67,7 @@ public class GlobalControllerAdvice {
         }
         return comment;
     }
+
     @ModelAttribute("createDiscussionForm")
     public CreateDiscussion createDiscussionForm() {
         User currentUser = userService.getAuthenticatedUser();
@@ -80,7 +81,7 @@ public class GlobalControllerAdvice {
 
     @ModelAttribute("createResourceForm")
     public CreateResourceDto createResourceForm() {
-        return  new CreateResourceDto();
+        return new CreateResourceDto();
     }
 
 

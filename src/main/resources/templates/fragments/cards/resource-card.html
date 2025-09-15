@@ -10,7 +10,9 @@
            th:text="${resource.description}">Build robust
             JSON APIs with DTOs, @Valid, and error handling.</p>
         <div class="mt-4 flex items-center justify-between">
-            <div class="text-sm text-gray-500">31 resources</div>
+<!--            <div class="text-sm text-gray-500"-->
+<!--                 th:text="${resource.resourceCount +' resources'}">31-->
+<!--                resources</div>-->
             <a
                     th:href="@{/resources/{id}(id=${resource.id})}"
                     class="rounded-lg bg-gray-900 px-3 py-1.5 text-sm font-semibold text-white hover:bg-black">

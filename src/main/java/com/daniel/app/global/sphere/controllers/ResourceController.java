@@ -60,7 +60,7 @@ public class ResourceController {
 
 
     @PostMapping("/add")
-    public String createResource(@Valid @ModelAttribute("createResourceForm") CreateResourceDto resource, BindingResult bindingResult, Model model) throws FileHandlerException {
+    public String createResource(@Valid @ModelAttribute("createResourceForm") CreateResourceDto resource, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("showCreateResourceForm", true);
             return "resources";

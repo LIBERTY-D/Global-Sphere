@@ -1,6 +1,7 @@
 package com.daniel.app.global.sphere.services;
 
 
+import com.daniel.app.global.sphere.Utils.CommonUtil;
 import com.daniel.app.global.sphere.Utils.CreatedAtComparator;
 import com.daniel.app.global.sphere.annotation.LogAspectAnnotation;
 import com.daniel.app.global.sphere.dtos.CreateResourceDto;
@@ -20,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,16 +47,16 @@ public class ResourceService {
 
     @Transactional
     @LogAspectAnnotation
-    public boolean createResource(CreateResourceDto createResourceDto) throws FileHandlerException {
+    public boolean createResource(CreateResourceDto createResourceDto) {
         log.info("CREATING RESOURCE");
         User user = userService.getAuthenticatedUser();
         Resource newResource = getResource(createResourceDto, user);
         user.getResources().add(newResource);
         user.incrementPostsCount();
-        try{
+        try {
             userRepository.save(user);
             userRepository.flush();
-        }catch (DataIntegrityViolationException exp){
+        } catch (DataIntegrityViolationException exp) {
             throw new DataIntegrityCreateResourceException("Resource field too long", createResourceDto);
         }
 
@@ -64,13 +64,13 @@ public class ResourceService {
     }
 
 
-    private static Resource getResource(CreateResourceDto createResourceDto,
-                                        User user) throws FileHandlerException {
+    private static Resource getResource(CreateResourceDto createResourceDto, User user) {
         Resource createResource = new Resource();
         createResource.setAuthor(user.getName());
         createResource.setAuthorId(user.getId());
         createResource.setTitle(createResourceDto.getTitle());
-        createResource.setExternalUrl(createResourceDto.getExternalUrl());
+
+        createResource.setExternalUrl(CommonUtil.checkLinkValidation(createResourceDto.getExternalUrl(), createResourceDto));
         createResource.setContent(createResourceDto.getContent());
         MultipartFile file = createResourceDto.getImageUrl();
         if (file != null && !file.isEmpty()) {
@@ -86,12 +86,12 @@ public class ResourceService {
     }
 
     private static Resource getResource(EditResourceDto editResourceDto,
-                                        User user) throws FileHandlerException {
+                                        User user) {
         Resource createResource = new Resource();
         createResource.setAuthor(user.getName());
         createResource.setAuthorId(user.getId());
         createResource.setTitle(editResourceDto.getTitle());
-        createResource.setExternalUrl(editResourceDto.getExternalUrl());
+        createResource.setExternalUrl(CommonUtil.checkLinkValidation(editResourceDto.getExternalUrl(), editResourceDto));
         createResource.setContent(editResourceDto.getContent());
         MultipartFile file = editResourceDto.getImage();
         if (file != null && !file.isEmpty()) {
@@ -111,21 +111,29 @@ public class ResourceService {
         return resource.getImageUrl();
     }
 
-    public boolean updateResource(Long resourceId, EditResourceDto dto) throws FileHandlerException {
+    @Transactional
+    public boolean updateResource(Long resourceId, EditResourceDto dto) {
         log.info("UPDATING RESOURCE");
         User user = userService.getAuthenticatedUser();
-        Resource newResource = getResource(dto, user);
-        newResource.setId(resourceId);
-        List<Resource> resources = user.getResources();
-        for (int i = 0; i < resources.size(); i++) {
-            if (Objects.equals(resources.get(i).getId(), resourceId)) {
-                resources.set(i, newResource);
-                break;
+        Resource resource = repository.findById(resourceId).orElseThrow(() -> new IllegalArgumentException("Resource not found"));
+        resource.setTitle(dto.getTitle());
+        resource.setDescription(dto.getDescription());
+        resource.setContent(dto.getContent());
+        String newUrl = CommonUtil.checkLinkValidation(dto.getExternalUrl(), dto);
+        resource.setExternalUrl(newUrl);
+        MultipartFile file = dto.getImage();
+        if (file != null && !file.isEmpty()) {
+            try {
+                resource.setImageUrl(file.getBytes());
+            } catch (IOException e) {
+                throw new FileHandlerException("imageUrl", e.getMessage());
             }
         }
-        userRepository.save(user);
+
+        repository.save(resource);
         return true;
     }
+
 
     public EditResourceDto getResourceById(Long resourceId) {
         var resource = repository.findById(resourceId).orElse(new Resource());

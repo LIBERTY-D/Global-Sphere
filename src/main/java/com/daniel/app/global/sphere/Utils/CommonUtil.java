@@ -10,7 +10,7 @@ public class CommonUtil {
             return null;
         }
         if (!link.startsWith("http://") && !link.startsWith("https://")) {
-            throw new InvalidLinkException("Invalid: Link must start with " + "http:// or https://", form);
+            throw new InvalidLinkException("Invalid: Link must start with http:// or https://", form);
         }
 
         return link;
@@ -20,7 +20,6 @@ public class CommonUtil {
         if (link == null || link.trim().isEmpty()) {
             return null;
         }
-
         if (!link.startsWith("http://") && !link.startsWith("https://")) {
             throw new InvalidLinkException("Invalid: Link must start with " +
                     "http:// or https://", form);

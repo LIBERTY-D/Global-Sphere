@@ -22,7 +22,7 @@ public class Resource extends BaseEntity {
     private byte[] imageUrl;
     private String externalUrl;
     private String author;
-    private Integer resourceCount;
+    private Integer resourceCount=0;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "resource_id")
     private User user;

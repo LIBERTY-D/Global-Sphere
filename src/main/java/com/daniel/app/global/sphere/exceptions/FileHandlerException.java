@@ -7,7 +7,7 @@ import java.io.IOException;
 
 @Getter
 @RequiredArgsConstructor
-public class FileHandlerException extends IOException {
+public class FileHandlerException extends RuntimeException {
     private final String field;
     private final String message;
 }
