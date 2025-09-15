@@ -6,7 +6,7 @@ import com.daniel.app.global.sphere.Utils.CreatedAtComparator;
 import com.daniel.app.global.sphere.annotation.LogAspectAnnotation;
 import com.daniel.app.global.sphere.dtos.CreateResourceDto;
 import com.daniel.app.global.sphere.dtos.EditResourceDto;
-import com.daniel.app.global.sphere.exceptions.DataIntegrityCreateResourceException;
+import com.daniel.app.global.sphere.exceptions.DataIntegrityException;
 import com.daniel.app.global.sphere.exceptions.FileHandlerException;
 import com.daniel.app.global.sphere.models.Resource;
 import com.daniel.app.global.sphere.models.User;
@@ -57,7 +57,7 @@ public class ResourceService {
             userRepository.save(user);
             userRepository.flush();
         } catch (DataIntegrityViolationException exp) {
-            throw new DataIntegrityCreateResourceException("Resource field too long", createResourceDto);
+            throw new DataIntegrityException("Resource field too long", createResourceDto);
         }
 
         return true;

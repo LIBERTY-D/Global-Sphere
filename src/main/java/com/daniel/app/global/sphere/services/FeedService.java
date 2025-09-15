@@ -6,6 +6,7 @@ import com.daniel.app.global.sphere.annotation.LogAspectAnnotation;
 import com.daniel.app.global.sphere.dtos.CreateComment;
 import com.daniel.app.global.sphere.dtos.CreateDiscussion;
 import com.daniel.app.global.sphere.dtos.CreateFeedDto;
+import com.daniel.app.global.sphere.exceptions.DataIntegrityException;
 import com.daniel.app.global.sphere.exceptions.FileHandlerException;
 import com.daniel.app.global.sphere.mapper.FeedMapper;
 import com.daniel.app.global.sphere.models.Comment;
@@ -16,6 +17,7 @@ import com.daniel.app.global.sphere.repository.FeedRepository;
 import com.daniel.app.global.sphere.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +45,7 @@ public class FeedService {
     }
 
     @LogAspectAnnotation
-    public boolean createFeed(CreateFeedDto createFeedDto) throws FileHandlerException {
+    public boolean createFeed(CreateFeedDto createFeedDto) {
         log.info("CREATING FEED");
 
         try {
@@ -68,8 +70,11 @@ public class FeedService {
 
             userRepository.save(user);
             return true;
-        } catch (IOException exp) {
-            System.out.println(exp.getMessage());
+        } catch (IOException | DataIntegrityViolationException exp) {
+            if (exp instanceof DataIntegrityViolationException) {
+                throw new DataIntegrityException(((DataIntegrityViolationException) exp).
+                        getMostSpecificCause().getMessage(), createFeedDto);
+            }
             throw new FileHandlerException("file", exp.getMessage());
 
         }

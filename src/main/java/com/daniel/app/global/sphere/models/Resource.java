@@ -16,16 +16,16 @@ public class Resource extends BaseEntity {
     private Long authorId;
     private String title;
     private String description;
-
     @Column(length = 7000)
     private String content;
     private byte[] imageUrl;
     private String externalUrl;
     private String author;
-    private Integer resourceCount=0;
+    private Integer resourceCount = 0;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "resource_id")
     private User user;
+
     public void increaseResourceCount() {
         this.resourceCount = this.resourceCount + 1;
     }

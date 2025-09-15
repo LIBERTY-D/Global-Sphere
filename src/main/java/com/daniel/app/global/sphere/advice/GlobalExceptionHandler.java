@@ -1,8 +1,7 @@
 package com.daniel.app.global.sphere.advice;
 
 
-import com.daniel.app.global.sphere.dtos.CreateResourceDto;
-import com.daniel.app.global.sphere.exceptions.DataIntegrityCreateResourceException;
+import com.daniel.app.global.sphere.exceptions.DataIntegrityException;
 import com.daniel.app.global.sphere.exceptions.InvalidLinkException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;
@@ -15,17 +14,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(DataIntegrityCreateResourceException.class)
-    public String handleDataIntegrityFormException(DataIntegrityCreateResourceException ex, Model model) {
+    @ExceptionHandler(DataIntegrityException.class)
+    public String handleDataIntegrityFormException(DataIntegrityException ex, Model model) {
         model.addAttribute("showCreateResourceForm", true);
         model.addAttribute("errorMessage", ex.getMessage());
-        model.addAttribute("createResourceForm", ex.getForm());
+        model.addAttribute("createResourceForm", ex.getCreateResourceDto());
         return "resources";
+
     }
 
     @ExceptionHandler(InvalidLinkException.class)
     public String invalidLinkException(InvalidLinkException ex, Model model) {
-
         if (ex.getCreateResourceDto() != null) {
             DataBinder dataBinder = new DataBinder(ex.getCreateResourceDto(), "createResourceForm");
             BindingResult bindingResult = dataBinder.getBindingResult();

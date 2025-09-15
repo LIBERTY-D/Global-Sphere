@@ -34,11 +34,10 @@ public class FeedController {
     private final ImageRepository imageRepository;
 
     @PostMapping("/create-feed")
-    public String createFeed(@Valid @ModelAttribute("createPostForm") CreateFeedDto createFeedDto,
-                             BindingResult bindingResult,
-                             Model model) {
+    public String createFeed(@Valid @ModelAttribute("createFeedForm") CreateFeedDto createFeedDto, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult.getAllErrors());
             model.addAttribute("showCreatePostModal", true);
             return "home";
         }
@@ -52,10 +51,7 @@ public class FeedController {
     }
 
     @PostMapping("/comments/add")
-    public String createComment(@Valid @ModelAttribute("createCommentForm") CreateComment createComment,
-                                BindingResult bindingResult,
-                                Model model) {
-
+    public String createComment(@Valid @ModelAttribute("createCommentForm") CreateComment createComment, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("showCommentModal", true);
             return "home";

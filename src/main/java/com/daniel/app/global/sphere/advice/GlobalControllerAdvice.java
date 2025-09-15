@@ -44,8 +44,8 @@ public class GlobalControllerAdvice {
                 : new EditProfileDto();
     }
 
-    @ModelAttribute("createPostForm")
-    public CreateFeedDto createPostForm() {
+    @ModelAttribute("createFeedForm")
+    public CreateFeedDto createFeedForm() {
         User currentUser = userService.getAuthenticatedUser();
         CreateFeedDto post = new CreateFeedDto();
         if (currentUser != null) {

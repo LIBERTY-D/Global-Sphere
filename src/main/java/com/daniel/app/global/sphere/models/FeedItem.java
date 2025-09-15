@@ -2,6 +2,7 @@ package com.daniel.app.global.sphere.models;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 
@@ -22,8 +23,11 @@ public class FeedItem extends BaseEntity  {
     private String author;
     private Role role;
     private byte [] avatar;
+    @Column(length = 2000)
     private String content;
+    @Column(length =  1000)
     private String codeSnippet;
+    @Column(length =  50)
     private String link;
     private int likes;
 
