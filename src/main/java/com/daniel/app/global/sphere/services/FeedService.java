@@ -178,4 +178,7 @@ public class FeedService {
     }
 
 
+    public List<FeedItem> searchFeeds(String query) {
+        return feedRepository.searchByAuthorOrContent(query);
+    }
 }
