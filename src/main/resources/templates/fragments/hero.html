@@ -13,7 +13,8 @@
                        id="create-account-hero"
                        href="#" sec:authorize="isAnonymous()">Create
                         your account</a>
-                    <a class="rounded-xl border border-gray-300 px-5 py-3 font-semibold text-gray-700 hover:bg-gray-50"
+                    <a  sec:authorize="isAuthenticated()"
+                        class="rounded-xl border border-gray-300 px-5 py-3 font-semibold text-gray-700 hover:bg-gray-50"
                        href="#resources-link">Browse
                         resources</a>
                 </div>

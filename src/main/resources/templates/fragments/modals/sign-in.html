@@ -38,18 +38,18 @@
                 <span class="text-gray-700">Email</span>
                 <input class="mt-1 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm
                              focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20"
-                       th:field="*{email}" />
+                       th:field="*{email}" id="signin-email" />
                 <p th:if="${#fields.hasErrors('email')}"
                    th:errors="*{email}"
                    class="mt-1 text-sm text-red-600"></p>
             </label>
-
             <!-- Password Field -->
             <label class="block text-sm">
                 <span class="text-gray-700">Password</span>
                 <input class="mt-1 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm
                              focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20"
-                       th:field="*{password}" type="password"/>
+                       th:field="*{password}" type="password"
+                       id="signin-password"/>
                 <p th:if="${#fields.hasErrors('password')}"
                    th:errors="*{password}"
                    class="mt-1 text-sm text-red-600"></p>

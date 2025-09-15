@@ -13,12 +13,13 @@
                    class="mt-1 text-sm text-red-600"></p>
                 <input
                         class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300" th:field="*{email}" placeholder="Email"
-                       type="email">
+                        id="signup-email" type="email">
                 <p th:if="${#fields.hasErrors('email')}"
                    th:errors="*{email}"
                    class="mt-1 text-sm text-red-600"></p>
                 <input
                 <input
+                        id="signup-password"
                         class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300" th:field="*{password}" placeholder="Password"
                 >
                 <p th:if="${#fields.hasErrors('password')}"

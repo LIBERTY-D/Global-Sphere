@@ -62,7 +62,8 @@
                 <!-- Avatar -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Avatar</label>
-                    <input type="file" th:field="*{avatar}" accept="image/*"
+                    <input type="file" id="edit-file" th:field="*{avatar}"
+                           accept="image/*"
                            class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300">
                     <p th:if="${#fields.hasErrors('avatar')}"
                        th:errors="*{avatar}"

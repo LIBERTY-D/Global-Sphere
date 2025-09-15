@@ -19,16 +19,17 @@
             <!-- Right side: desktop only -->
             <div class="hidden md:flex items-center gap-3">
                 <!-- Search -->
-                <form th:action="@{/home}" method="get"
-                      class="flex items-center">
-                     <input name="q"
+                <form sec:authorize="isAuthenticated()" th:action="@{/home}" method="get" class="flex items-center">
+                    <input id="searchInput"
+                           name="q"
                            th:value="${searchQuery}"
-                           class="w-72 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                           class="w-72 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm
+                  focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20"
                            placeholder="Search post by content or author"
-                           type="text"
-                        />
-                    <button type="submit"
-                            class="ml-2 rounded-xl bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-700">
+                           type="text" />
+                    <button id="searchBtn" type="submit"
+                            class="ml-2 rounded-xl bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-700"
+                            disabled>
                         Search
                     </button>
                 </form>

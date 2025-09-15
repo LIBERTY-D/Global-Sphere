@@ -36,7 +36,8 @@
 
     <h2 class="text-xl font-semibold mb-4">Edit Post</h2>
     <form th:action="@{/feeds/edit/{id}(id=${post.id})}" method="post"
-          th:object="${updateFeedDto}" class="space-y-4">
+          th:object="${updateFeedDto}" class="space-y-4"
+          enctype="multipart/form-data">
         <!-- Post Content -->
         <label class="block">
             <span class="text-gray-700">Content</span>
@@ -65,7 +66,18 @@
             <p class="text-red-600 text-sm" th:if="${#fields.hasErrors('link')}"
                th:errors="*{link}"></p>
         </label>
-
+        <!-- File Upload -->
+        <div>
+            <button class="rounded-xl border border-gray-200 px-3 py-1.5 text-sm hover:bg-gray-50"
+                    id="uploadFileBtn-edit"
+                    type="button">
+                Upload file
+            </button>
+            <input class="hidden" id="fileInput-edit" th:field="*{file}"
+                   type="file" accept="image/*"/>
+            <p class="text-red-500 text-sm mt-1" th:errors="*{file}"
+               th:if="${#fields.hasErrors('file')}"></p>
+        </div>
         <div class="flex justify-end gap-2">
             <a th:href="@{/home}"
                class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</a>
@@ -82,5 +94,6 @@
 </div>
 
 
+<script th:src="@{/js/edit-feed.js}"></script>
 </body>
 </html>

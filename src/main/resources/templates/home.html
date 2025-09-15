@@ -74,12 +74,12 @@
 </main>
 
 <!-- Resource grid (explore) -->
-<section id="resources-link"
-         class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
+<section id="resources-link"  sec:authorize="isAuthenticated()" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
     <div class="mb-4 flex items-center justify-between">
         <h2 class="text-xl font-semibold">Explore topics</h2>
         <a th:href="@{/resources}"
-           class="text-sm font-semibold text-primary-700">See all
+           class="text-sm font-semibold text-primary-700"
+          >See all
             →</a>
     </div>
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
