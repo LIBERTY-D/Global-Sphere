@@ -1,71 +1,54 @@
-<header class="sticky top-0 z-30 border-b bg-white/80 backdrop-blur"
-        th:fragment="header">
+<header class="sticky top-0 z-30 border-b bg-white/80 backdrop-blur" th:fragment="header">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
-            <div class="flex items-center gap-3">
-                <a class="flex items-center gap-2" href="#">
-                    <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-primary-600 text-white font-bold">GS</span>
-                    <a class="text-lg font-semibold" th:href="@{/home}">Global
-                        Sphere</a>
-                </a>
-                <nav  class="hidden md:flex md:items-center md:gap-6 ml-6">
-                    <a class="text-gray-600 hover:text-gray-900"
-                       th:href="@{/about}">about</a>
-                    <a class="text-gray-600 hover:text-gray-900" href="#feed"
-                       sec:authorize="isAuthenticated()">Feed</a>
-                    <a class="text-gray-600 hover:text-gray-900"
-                       th:href="@{/resources}">
-                        Resources</a>
+            <!-- Logo -->
+            <a class="flex items-center gap-2" th:href="@{/home}">
+                <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-primary-600 text-white font-bold">GS</span>
+                <span class="text-lg font-semibold">Global Sphere</span>
+            </a>
 
-                    <a class="text-gray-600 hover:text-gray-900"
-                       href="#discuss">Discussions</a>
-                    <a class="text-gray-600 hover:text-gray-900"
-                       href="#people"
-                       sec:authorize="isAuthenticated()">People</a>
-                </nav>
-            </div>
+            <!-- Desktop nav links -->
+            <nav class="hidden md:flex md:items-center md:gap-6">
+                <a class="text-gray-600 hover:text-gray-900" th:href="@{/about}" sec:authorize="isAuthenticated()">About</a>
+                <a class="text-gray-600 hover:text-gray-900" href="#feed" sec:authorize="isAuthenticated()">Feed</a>
+                <a class="text-gray-600 hover:text-gray-900" th:href="@{/resources}" sec:authorize="isAuthenticated()">Resources</a>
+                <a class="text-gray-600 hover:text-gray-900" href="#discuss" sec:authorize="isAuthenticated()">Discussions</a>
+                <a class="text-gray-600 hover:text-gray-900" href="#people" sec:authorize="isAuthenticated()">People</a>
+            </nav>
 
-            <!-- Right-side -->
+            <!-- Right side: desktop only -->
             <div class="hidden md:flex items-center gap-3">
                 <!-- Search -->
-                <div class="relative">
-                    <input class="w-72 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20"
-                           placeholder="Search topics, people, posts..."
-                           type="text" sec:authorize="isAuthenticated()"/>
-                </div>
+                <input class="w-72 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                       placeholder="Search topics, people, posts..." type="text" sec:authorize="isAuthenticated()"/>
 
-                <button
-                        class="rounded-xl bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-700"
-                        id="btn-open-create"
-                        sec:authorize="isAuthenticated()">Create Post
+                <!-- Create post -->
+                <button class="rounded-xl bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-700"
+                        sec:authorize="isAuthenticated()" data-open="create-post">
+                    Create Post
                 </button>
 
-                <!-- User profile / login buttons -->
-                <div th:if="${currentUser != null}"
-                     class="flex items-center gap-2">
-                    <img th:src="${currentUser != null and currentUser.avatar != null} ? @{/user/image} : @{/assets/blank.jpg}"
-                         alt="Profile"
-                         class="h-9 w-9 rounded-full object-cover border-2 border-gray-300"/>
-                    <span th:text="${currentUser.name}"
-                          class="font-semibold text-gray-700"></span>
+                <!-- User auth buttons -->
+                <div th:if="${currentUser != null}" class="flex items-center gap-2">
+                    <img th:src="${currentUser.avatar != null} ? @{/user/image} : @{/assets/blank.jpg}"
+                         alt="Profile" class="h-9 w-9 rounded-full object-cover border-2 border-gray-300"/>
+                    <span th:text="${currentUser.name}" class="font-semibold text-gray-700"></span>
                     <a class="rounded-xl bg-gray-200 px-3 py-1 text-sm font-semibold hover:bg-gray-300"
                        th:href="@{/logout}">Logout</a>
                 </div>
 
-
                 <div th:unless="${currentUser != null}">
-                    <a class="rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50"
-                       href="#signin" id="btn-open-signin">Sign in</a>
-                    <a class="rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-black"
-                       id="btn-open-signup" href="#signup">Sign up</a>
+                    <button class="rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                            data-open="signin">Sign in</button>
+                    <button class="rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-black"
+                            data-open="signup">Sign up</button>
                 </div>
             </div>
 
-            <!-- Mobile menu trigger -->
+            <!-- Mobile menu button -->
             <button class="inline-flex md:hidden items-center justify-center rounded-xl border border-gray-200 p-2.5"
                     id="mobile-menu-button">
-                <svg class="h-6 w-6 text-gray-700" fill="none"
-                     stroke="currentColor" stroke-width="1.5"
+                <svg class="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="1.5"
                      viewBox="0 0 24 24">
                     <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
                           stroke-linecap="round" stroke-linejoin="round"/>
@@ -73,22 +56,29 @@
             </button>
         </div>
     </div>
-    <!-- Mobile menu goes here -->
+
+    <!-- Mobile menu -->
     <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
         <nav class="flex flex-col p-4 gap-3">
-            <a class="text-gray-600 hover:text-gray-900" th:href="@{/about}">About</a>
+            <a class="text-gray-600 hover:text-gray-900" th:href="@{/about}" sec:authorize="isAuthenticated()">About</a>
             <a class="text-gray-600 hover:text-gray-900" href="#feed" sec:authorize="isAuthenticated()">Feed</a>
-            <a class="text-gray-600 hover:text-gray-900" th:href="@{/resources}">Resources</a>
-            <a class="text-gray-600 hover:text-gray-900" href="#discuss">Discussions</a>
+            <a class="text-gray-600 hover:text-gray-900" th:href="@{/resources}" sec:authorize="isAuthenticated()">Resources</a>
+            <a class="text-gray-600 hover:text-gray-900" href="#discuss" sec:authorize="isAuthenticated()">Discussions</a>
             <a class="text-gray-600 hover:text-gray-900" href="#people" sec:authorize="isAuthenticated()">People</a>
 
-            <!-- Logout button -->
-            <a class="rounded-xl bg-gray-200 px-3 py-2 text-sm font-semibold hover:bg-gray-300"
-               th:href="@{/logout}"
-               sec:authorize="isAuthenticated()">Logout</a>
+            <!-- User auth buttons -->
+            <div th:if="${currentUser != null}">
+                <button class="rounded-xl bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700"
+                        data-open="create-post">Create Post</button>
+                <a class="rounded-xl bg-gray-200 px-3 py-2 text-sm font-semibold hover:bg-gray-300"
+                   th:href="@{/logout}">Logout</a>
+            </div>
+            <div th:unless="${currentUser != null}">
+                <button class="rounded-xl border border-gray-200 px-4 py-2 text-sm font-semibold hover:bg-gray-50"
+                        data-open="signin">Sign in</button>
+                <button class="rounded-xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-black"
+                        data-open="signup">Sign up</button>
+            </div>
         </nav>
     </div>
-
 </header>
-
-

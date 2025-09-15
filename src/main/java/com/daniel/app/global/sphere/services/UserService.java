@@ -90,7 +90,6 @@ public class UserService {
 
     public User getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("Getting authenticated user");
         if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String && authentication.getPrincipal().equals("anonymousUser"))) {
             User principal = (User) authentication.getPrincipal();
             return findUserByEmail(principal.getEmail());
