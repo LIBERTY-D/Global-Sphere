@@ -7,12 +7,12 @@ import com.daniel.app.global.sphere.models.User;
 import com.daniel.app.global.sphere.services.FeedService;
 import com.daniel.app.global.sphere.services.ResourceService;
 import com.daniel.app.global.sphere.services.UserService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -26,18 +26,27 @@ public class HomeController {
 
 
     @RequestMapping(value = {"", "/", "home"}, method = RequestMethod.GET)
-    public String getHomePage(Model model, HttpSession httpSession) {
+    public String getHomePage(@RequestParam(name = "q", required = false) String query, Model model) {
         User currentUser = userService.getAuthenticatedUser();
-//        httpSession.setAttribute("currentUser",currentUser);
+
+        List<FeedItem> feeds;
+        if (query != null && !query.isBlank()) {
+            feeds = feedService.searchFeeds(query);
+        } else {
+            feeds = feedService.getFeeds();
+        }
+
         List<Resource> featuredResource = resourceService.getFeaturedResources();
-        List<FeedItem> feedItems = feedService.getFeeds();
         List<Person> peoples = userService.peopleToFollow();
-        model.addAttribute("feeds", feedItems);
+
+        model.addAttribute("feeds", feeds);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("follow", peoples);
         model.addAttribute("featuredResources", featuredResource);
+        model.addAttribute("searchQuery", query);
 
         return "home";
     }
+
 
 }
