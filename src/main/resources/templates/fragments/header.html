@@ -8,7 +8,7 @@
                     <a class="text-lg font-semibold" th:href="@{/home}">Global
                         Sphere</a>
                 </a>
-                <nav class="hidden md:flex md:items-center md:gap-6 ml-6">
+                <nav  class="hidden md:flex md:items-center md:gap-6 ml-6">
                     <a class="text-gray-600 hover:text-gray-900"
                        th:href="@{/about}">about</a>
                     <a class="text-gray-600 hover:text-gray-900" href="#feed"
@@ -73,4 +73,22 @@
             </button>
         </div>
     </div>
+    <!-- Mobile menu goes here -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+        <nav class="flex flex-col p-4 gap-3">
+            <a class="text-gray-600 hover:text-gray-900" th:href="@{/about}">About</a>
+            <a class="text-gray-600 hover:text-gray-900" href="#feed" sec:authorize="isAuthenticated()">Feed</a>
+            <a class="text-gray-600 hover:text-gray-900" th:href="@{/resources}">Resources</a>
+            <a class="text-gray-600 hover:text-gray-900" href="#discuss">Discussions</a>
+            <a class="text-gray-600 hover:text-gray-900" href="#people" sec:authorize="isAuthenticated()">People</a>
+
+            <!-- Logout button -->
+            <a class="rounded-xl bg-gray-200 px-3 py-2 text-sm font-semibold hover:bg-gray-300"
+               th:href="@{/logout}"
+               sec:authorize="isAuthenticated()">Logout</a>
+        </nav>
+    </div>
+
 </header>
+
+
