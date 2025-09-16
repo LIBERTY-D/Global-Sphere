@@ -1,31 +1,29 @@
 spring:
+  profiles:
+    active: ${APP_ACTIVE_PROFILE :dev}
   application:
-   name: Global Sphere
+    name: Global Sphere
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-#  main:
-#    allow-circular-references: true #dev only
   thymeleaf:
     cache: false
   datasource:
-    url: jdbc:postgresql://localhost:5432/global_db
-    username: userDemo
-    password: password
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     properties:
       hibernate:
         format_sql: true
     show-sql: true
 
-
 server:
-#  servlet:
-#    context-path: /global
-
-  port: 8080
+  port: ${APP_PORT}
+custom:
+  populate_db: ${APP_POPULATE :false}

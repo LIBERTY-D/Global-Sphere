@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -21,14 +23,21 @@ public class GlobalSphereApplication {
 
 	private  final UserRepository userRepository;
 	private  final PasswordEncoder passwordEncoder;
+	private  final Environment env;
 	public static void main(String[] args) {
 		SpringApplication.run(GlobalSphereApplication .class, args);
 	}
 
 
 	@PostConstruct
-	public  void populate(){
+	@Profile("dev")
+	public void populate() {
+		if (!Boolean.parseBoolean(env.getProperty("custom.populate_db", "false"))) {
+			return;
+		}
+
 		log.info("POPULATING EXAMPLE USERS");
+
 		User admin = new User(
 				"Alex Doe",
 				"Computer Science • Spring MVC",
@@ -43,8 +52,6 @@ public class GlobalSphereApplication {
 		admin.setEmail("user@example.com");
 		admin.setLinkedInUrl("https://linkedin.com/in/alexdoe");
 		admin.setGithubUrl("https://github.com/alexdoe");
-
-
 
 		User user = new User(
 				"Liberty Mukubvu",
@@ -74,7 +81,7 @@ public class GlobalSphereApplication {
 		admin2.setPostsCount(0);
 		admin2.setEmail("daniel@example.com");
 
-		userRepository.saveAll(List.of(admin,user,admin2));
+		userRepository.saveAll(List.of(admin, user, admin2));
 	}
 
 }
