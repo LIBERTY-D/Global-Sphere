@@ -28,7 +28,7 @@ public class GlobalSphereApplication {
 
 	@PostConstruct
 	public  void populate(){
-		log.info("Populating user in db");
+		log.info("POPULATING EXAMPLE USERS");
 		User admin = new User(
 				"Alex Doe",
 				"Computer Science • Spring MVC",
@@ -61,7 +61,20 @@ public class GlobalSphereApplication {
 		user.setLinkedInUrl("https://linkedin.com/in/alexdoe");
 		user.setGithubUrl("https://github.com/alexdoe");
 
-		userRepository.saveAll(List.of(admin,user));
+		User admin2 = new User(
+				"Danie Mukubvu",
+				"Computer Science",
+				null,
+				"INSTRUCTOR",
+				Role.ADMIN
+		);
+		admin2.setPassword(passwordEncoder.encode("12345"));
+		admin2.setFollowersCount(0);
+		admin2.setFollowingCount(0);
+		admin2.setPostsCount(0);
+		admin2.setEmail("daniel@example.com");
+
+		userRepository.saveAll(List.of(admin,user,admin2));
 	}
 
 }
