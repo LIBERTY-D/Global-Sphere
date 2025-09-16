@@ -9,13 +9,13 @@
 
 
         <!-- Content -->
-        <div class="flex-1 min-w-0"> <!-- prevents overflow -->
+        <div class="flex-1 min-w-0">
             <div class="flex items-center justify-between">
                 <div class="min-w-0">
                     <h5 class="font-semibold truncate"
                         th:text="${article.author}">Author Name</h5>
                     <p class="text-xs text-gray-500"
-                       th:text="${article.role + ' • ' + article.timeAgo}">Role
+                       th:text="${article.role + ' • ' + #temporals.format(article.createdAt, 'EEEE dd MM yyyy HH:mm')}">Role
                         • Time</p>
                 </div>
             </div>
