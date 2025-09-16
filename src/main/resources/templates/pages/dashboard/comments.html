@@ -57,6 +57,7 @@
             <thead class="bg-gradient-to-r from-primary-500 to-primary-700 text-white">
             <tr>
                 <th class="px-6 py-3 text-left text-sm font-semibold">ID</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold">CREATED_AT</th>
                 <th class="px-6 py-3 text-left text-sm font-semibold">Author</th>
                 <th class="px-6 py-3 text-left text-sm font-semibold">Text</th>
                 <th class="px-6 py-3 text-left text-sm font-semibold">Feed</th>
@@ -67,6 +68,8 @@
             <tbody class="divide-y divide-gray-200">
             <tr th:each="comment : ${comments}" class="hover:bg-gray-50">
                 <td class="px-6 py-3 text-sm text-gray-700" th:text="${comment.id}"></td>
+                <td class="px-6 py-3 text-sm text-gray-700"
+                    th:text="${#temporals.format(comment.createdAt,'dd MMM yyyy HH:mm')}"></td>
                 <td class="px-6 py-3 text-sm text-gray-700" th:text="${comment.author}"></td>
                 <td class="px-6 py-3 text-sm text-gray-700 max-w-xs truncate"
                     th:text="${comment.text}"></td>

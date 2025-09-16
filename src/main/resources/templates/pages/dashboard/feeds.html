@@ -57,6 +57,7 @@
             <thead class="bg-gradient-to-r from-primary-500 to-primary-700 text-white">
             <tr>
                 <th class="px-6 py-3">ID</th>
+                <th class="px-6 py-3">CREATED_AT</th>
                 <th class="px-6 py-3">Author</th>
                 <th class="px-6 py-3">Content</th>
                 <th class="px-6 py-3">Likes</th>
@@ -67,6 +68,8 @@
             <tbody>
             <tr th:each="feed : ${feeds}" class="border-b hover:bg-gray-50">
                 <td class="px-6 py-3" th:text="${feed.id}"></td>
+                <td class="px-6 py-3"
+                    th:text="${#temporals.format(feed.createdAt,'dd MMM yyyy HH:mm')}"></td>
                 <td class="px-6 py-3" th:text="${feed.author}"></td>
                 <td class="px-6 py-3 max-w-xs truncate" th:text="${feed.content}"
                     th:title="${feed.content}">
