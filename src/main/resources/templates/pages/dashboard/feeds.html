@@ -1,18 +1,60 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8"/>
     <title>Manage Feeds</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                primary: {
+                  500: '#6366f1',
+                  600: '#4f46e5',
+                  700: '#4338ca'
+                }
+              }
+            }
+          }
+        }
+    </script>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-gray-50 min-h-screen">
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-    <h1 class="text-2xl font-bold text-gray-700 mb-6">Manage Feeds</h1>
+<!-- Navbar -->
+<header class="bg-primary-600 text-white shadow sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+        <div class="flex items-center space-x-3">
+            <span class="text-xl font-bold">🌍 Global Sphere Admin</span>
+            <span class="text-sm text-primary-100">Feeds Management</span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <span class="hidden sm:inline">Hello,
+                <span class="font-semibold" sec:authentication="name">User</span>
+            </span>
+            <a th:href="@{/dashboard}"
+               class="px-3 py-2 rounded-lg bg-white text-primary-600 font-semibold hover:bg-gray-100">
+                Dashboard
+            </a>
+            <form th:action="@{/logout}" method="post" class="inline">
+                <button type="submit"
+                        class="px-3 py-2 rounded-lg bg-red-500 text-white font-semibold hover:bg-red-600">
+                    Logout
+                </button>
+            </form>
+        </div>
+    </div>
+</header>
 
-    <div class="overflow-x-auto bg-white shadow rounded-2xl">
-        <table class="min-w-full text-sm text-left text-gray-700">
-            <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+<!-- Main Content -->
+<main class="p-6 max-w-7xl mx-auto">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">Manage Feeds</h1>
+
+    <div class="overflow-x-auto bg-white shadow-lg rounded-xl">
+        <table class="min-w-full text-sm text-left border border-gray-200 rounded-xl overflow-hidden">
+            <thead class="bg-gradient-to-r from-primary-500 to-primary-700 text-white">
             <tr>
                 <th class="px-6 py-3">ID</th>
                 <th class="px-6 py-3">Author</th>
@@ -33,16 +75,16 @@
                 <td class="px-6 py-3" th:text="${feed.type}"></td>
                 <td class="px-6 py-3 flex gap-2">
                     <a th:href="@{'/dashboard/feeds/edit/' + ${feed.id}}"
-                       class="px-3 py-1 bg-blue-500 text-white rounded">Edit</a>
+                       class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Edit</a>
                     <a th:href="@{'/dashboard/feeds/delete/' + ${feed.id}}"
-                       class="px-3 py-1 bg-red-500 text-white rounded"
+                       class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
                        onclick="return confirm('Delete this feed?')">Delete</a>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
-</div>
+</main>
 
 </body>
 </html>
