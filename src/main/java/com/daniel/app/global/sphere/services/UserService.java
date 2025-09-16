@@ -131,6 +131,39 @@ public class UserService {
         }
     }
 
+    @Transactional
+    public void followUser(Long userId) {
+        User principalUser = getAuthenticatedUser();
+        User currentUser = userRepository.findByEmail(principalUser.getEmail())
+                .orElseThrow(() -> new RuntimeException("Authenticated user not found"));
+        User userToFollow = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User to follow not found"));
+        if (!currentUser.getFollowing().contains(userToFollow)) {
+            currentUser.follow(userToFollow);
+        }
+    }
+
+    @Transactional
+    public void unfollowUser(Long userId) {
+        User principalUser = getAuthenticatedUser();
+        User currentUser = userRepository.findByEmail(principalUser.getEmail()).orElseThrow(() -> new RuntimeException("Authenticated user not found"));
+        User userToUnfollow = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User to unfollow not found"));
+        if (currentUser.getFollowing().contains(userToUnfollow)) {
+            currentUser.unfollow(userToUnfollow);
+        }
+    }
+
+    @Transactional
+    public void removeFollower(Long followerId) {
+        User principalUser = getAuthenticatedUser();
+        User currentUser = userRepository.findByEmail(principalUser.getEmail()).orElseThrow(() -> new RuntimeException("Authenticated user not found"));
+        User follower = userRepository.findById(followerId).orElseThrow(() -> new RuntimeException("Follower not found"));
+        if (currentUser.getFollowers().contains(follower)) {
+            currentUser.unfollow(follower);
+            follower.unfollow(currentUser);
+
+        }
+    }
+
 
     public User findUserImageById(Long id) {
         return userRepository.findById(id).orElse(new User());

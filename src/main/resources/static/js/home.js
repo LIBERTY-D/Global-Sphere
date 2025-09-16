@@ -101,3 +101,62 @@ createPostBtn?.addEventListener("click",()=>{
   searchInput.addEventListener("input", () => {
         searchBtn.disabled = ! searchInput.value.trim();
    });
+// edit modal
+const followingIdProfileBtn = $("#following-id-profile")
+const followersIdProfileBtn =  $("#followers-id-profile")
+const followModal = $('#followModal');
+const closeBtnFollowersFollow = $("#followers-following-close-id-btn")
+const closeXFollowersFollow = $("#followers-following-close-id-x")
+
+followingIdProfileBtn?.addEventListener("click",()=>{
+ toggle(followModal, followModal.classList.contains("hidden"))
+})
+
+
+followersIdProfileBtn?.addEventListener("click",()=>{
+ toggle(followModal, followModal.classList.contains("hidden"))
+})
+
+
+closeBtnFollowersFollow?.addEventListener("click",()=>{
+ unflex(followModal )
+})
+
+closeXFollowersFollow ?.addEventListener("click",()=>{
+ unflex(followModal )
+})
+
+const followersTabBtn =  $("#followersTab")
+const followingTabBtn =  $("#followingTab")
+
+followersTabBtn?.addEventListener("click",()=>{
+    showTab('followers')
+})
+
+followingTabBtn?.addEventListener("click",()=>{
+    showTab('following')
+})
+
+ function showTab(tab) {
+        const followersContent = $('#followersContent');
+        const followingContent = $('#followingContent');
+        const followersTab = $('#followersTab');
+        const followingTab = $('#followingTab');
+
+        if(tab === 'followers'){
+            followersContent.classList.remove('hidden');
+            followingContent.classList.add('hidden');
+            followersTab.classList.add('text-primary-600', 'border-b-2', 'border-primary-600');
+            followersTab.classList.remove('text-gray-500');
+            followingTab.classList.remove('text-primary-600', 'border-b-2', 'border-primary-600');
+            followingTab.classList.add('text-gray-500');
+        } else {
+            followersContent.classList.add('hidden');
+            followingContent.classList.remove('hidden');
+            followingTab.classList.add('text-primary-600', 'border-b-2', 'border-primary-600');
+            followingTab.classList.remove('text-gray-500');
+            followersTab.classList.remove('text-primary-600', 'border-b-2', 'border-primary-600');
+            followersTab.classList.add('text-gray-500');
+        }
+    }
+

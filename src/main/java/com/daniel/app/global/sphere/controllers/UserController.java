@@ -134,4 +134,22 @@ public class UserController {
         return "redirect:/home";
     }
 
+    @GetMapping("/user/follow")
+    public String follow(@RequestParam(value = "id", required = false) Long userId) {
+        userService.followUser(userId);
+        return "redirect:/home";
+    }
+
+    @GetMapping("/user/unfollow")
+    public String unfollow(@RequestParam(value = "id", required = false) Long userId) {
+        userService.unfollowUser(userId);
+        return "redirect:/home";
+    }
+
+    @GetMapping("/user/remove/follower")
+    public String removeFollower(@RequestParam(value = "id", required = false) Long userId) {
+        userService.removeFollower(userId);
+        return "redirect:/home";
+    }
+
 }
