@@ -27,7 +27,8 @@ public class AppSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/home", "/about", "/signin", "/register", "/css/**", "/js/**", "/assets/**")
-                        .permitAll()
+                        .permitAll().
+                        requestMatchers("/dashboard").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
