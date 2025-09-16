@@ -48,7 +48,7 @@ public class FeedController {
             if (cntType.startsWith("image/svg+xml")) {
                 bindingResult.rejectValue("file", "avatar.invalidType", "Image type svg+xml not allowed");
                 model.addAttribute("showCreatePostModal", true);
-                return "home";
+                return "pages/home/home";
             }
         }
 

@@ -4,6 +4,7 @@ package com.daniel.app.global.sphere.advice;
 import com.daniel.app.global.sphere.exceptions.DataIntegrityException;
 import com.daniel.app.global.sphere.exceptions.InvalidLinkException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Slf4j
 @ControllerAdvice
+@Order(1)
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityException.class)
@@ -19,7 +21,7 @@ public class GlobalExceptionHandler {
         model.addAttribute("showCreateResourceForm", true);
         model.addAttribute("errorMessage", ex.getMessage());
         model.addAttribute("createResourceForm", ex.getCreateResourceDto());
-        return "resources";
+        return "pages/resources/resources";
 
     }
 
@@ -41,7 +43,7 @@ public class GlobalExceptionHandler {
             model.addAttribute("showEditResourceForm", true);
             model.addAttribute(BindingResult.MODEL_KEY_PREFIX + "editResourceDtoForm", bindingResult);
         }
-        return "resources";
+        return "pages/resources/resources";
     }
 
 
@@ -50,7 +52,7 @@ public class GlobalExceptionHandler {
         log.error("OVERALL EXCEPTION: {}", ex.getMessage());
         model.addAttribute("status", 500);
         model.addAttribute("error", ex.getMessage() != null ? ex.getMessage() : "Unexpected error");
-        return "error";
+        return "pages/error/error";
     }
 
 

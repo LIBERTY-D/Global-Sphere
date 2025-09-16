@@ -43,7 +43,7 @@ public class ResourceController {
                 .findFirst()
                 .orElse(null);
 
-        if (resource == null) return "error/404";
+        if (resource == null) return "pages/error/error";
         if (!model.containsAttribute("editResourceDtoForm")) {
             EditResourceDto dto = new EditResourceDto();
             dto.setTitle(resource.getTitle());

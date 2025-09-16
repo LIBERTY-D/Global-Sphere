@@ -36,14 +36,14 @@ public class UserController {
     public String registerUser(@Valid @ModelAttribute("signUpForm") SignUp signUp, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("showPasswordSignUpModal", true);
-            return "home";
+            return "pages/home/home";
         }
         try {
             userService.registerUser(signUp);
         } catch (DataIntegrityViolationException exp) {
             bindingResult.rejectValue("email", "error.signinForm", "email " + "taken");
             model.addAttribute("showPasswordSignUpModal", true);
-            return "home";
+            return "pages/home/home";
 
         }
 
@@ -71,7 +71,7 @@ public class UserController {
         } catch (AuthException e) {
             bindingResult.rejectValue(e.getField(), "error.signinForm", e.getMessage());
             model.addAttribute("showSignInModal", true);
-            return "home";
+            return "pages/home/home";
         }
         return "redirect:/home";
     }
@@ -80,10 +80,10 @@ public class UserController {
     public String forgotPassword(@Valid @ModelAttribute("forgotForm") ForgotPassword forgot, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("showPasswordForgotModal", true);
-            return "home";
+            return "pages/home/home";
         }
         model.addAttribute("showPasswordForgotModal", false);
-        return "home";
+        return "pages/home/home";
     }
 
     @PostMapping("/profile/edit")
@@ -93,20 +93,20 @@ public class UserController {
             if (!cntType.startsWith("image/")) {
                 bindingResult.rejectValue("avatar", "avatar.invalidType", "Only image files are allowed");
                 model.addAttribute("showEditProfileModal", true);
-                return "home";
+                return "pages/home/home";
             }
             if (cntType.startsWith("image/svg+xml")) {
                 bindingResult.rejectValue("avatar", "avatar.invalidType",
                         "Image type svg+xml not allowed" +
                                 " ");
                 model.addAttribute("showEditProfileModal", true);
-                return "home";
+                return "pages/home/home";
             }
         }
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("showEditProfileModal", true);
-            return "home";
+            return "pages/home/home";
         }
 
         Boolean res = userService.updateUser(editProfileDto);

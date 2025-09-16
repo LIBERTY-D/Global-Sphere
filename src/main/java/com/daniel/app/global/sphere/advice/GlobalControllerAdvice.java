@@ -4,6 +4,7 @@ import com.daniel.app.global.sphere.dtos.*;
 import com.daniel.app.global.sphere.models.User;
 import com.daniel.app.global.sphere.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 @RequiredArgsConstructor
+@Order(0)
 public class GlobalControllerAdvice {
 
     private final UserService userService;

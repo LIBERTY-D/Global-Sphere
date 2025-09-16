@@ -39,7 +39,10 @@ public class AppSecurityConfig {
                         .permitAll()
                 );
 
-        return http.build();
+
+        return http.exceptionHandling(exp->{
+            exp.accessDeniedPage("/access-denied");
+        }).build();
     }
 
 }
