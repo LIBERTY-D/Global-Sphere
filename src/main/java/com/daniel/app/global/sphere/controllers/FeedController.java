@@ -43,7 +43,7 @@ public class FeedController {
                 bindingResult.rejectValue("file", "avatar.invalidType", "Only" +
                         " image files are allowed");
                 model.addAttribute("showCreatePostModal", true);
-                return "home";
+                return "pages/home/home";
             }
             if (cntType.startsWith("image/svg+xml")) {
                 bindingResult.rejectValue("file", "avatar.invalidType", "Image type svg+xml not allowed");
@@ -54,7 +54,7 @@ public class FeedController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("showCreatePostModal", true);
-            return "home";
+            return "pages/home/home";
         }
         try {
             feedService.createFeed(createFeedDto);
@@ -62,7 +62,7 @@ public class FeedController {
             bindingResult.rejectValue("file", "something wrong with your " +
                     "image");
             model.addAttribute("showCreatePostModal", true);
-            return "home";
+            return "pages/home/home";
         }
 
         return "redirect:/home";
@@ -94,7 +94,7 @@ public class FeedController {
         model.addAttribute("post", feed);
         model.addAttribute("updateFeedDto", updateFeedDto);
 
-        return "edit-feed";
+        return "pages/feed/edit-feed";
     }
 
     @PostMapping("/feeds/like/{id}")
@@ -115,17 +115,17 @@ public class FeedController {
             if (!cntType.startsWith("image/")) {
                 bindingResult.rejectValue("file", "avatar.invalidType", "Only" + " image files are allowed");
                 model.addAttribute("post", feed);
-                return "edit-feed";
+                return "pages/feed/edit-feed";
             }
             if (cntType.startsWith("image/svg+xml")) {
                 model.addAttribute("post", feed);
                 bindingResult.rejectValue("file", "avatar.invalidType", "Image type svg+xml not allowed");
-                return "edit-feed";
+                return "pages/feed/edit-feed";
             }
         }
         if (bindingResult.hasErrors()) {
             model.addAttribute("post", feed);
-            return "edit-feed";
+            return "pages/feed/edit-feed";
         }
         try {
             model.addAttribute("post", feed);
@@ -133,7 +133,7 @@ public class FeedController {
         } catch (IOException exp) {
             model.addAttribute("post", feed);
             bindingResult.rejectValue("file", "something wrong with your image");
-            return "edit-feed";
+            return "pages/feed/edit-feed";
         }
         return "redirect:/home";
     }
@@ -155,7 +155,7 @@ public class FeedController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("showDiscussionModal", true);
-            return new ModelAndView("home");
+            return new ModelAndView("pages/home/home");
         }
 
         feedService.createDiscussion(createDiscussion);

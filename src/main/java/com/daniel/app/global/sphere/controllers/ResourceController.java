@@ -33,7 +33,7 @@ public class ResourceController {
         User currentUser = userService.getAuthenticatedUser();
         model.addAttribute("resources", resourceService.getResources());
         model.addAttribute("currentUser", currentUser);
-        return "resources";
+        return "pages/resources/resources";
     }
 
     @GetMapping("/{id}")
@@ -55,7 +55,7 @@ public class ResourceController {
 
         model.addAttribute("resource", resource);
         model.addAttribute("currentUser", userService.getAuthenticatedUser());
-        return "resource";
+        return "pages/resource/resource";
     }
 
 
@@ -63,20 +63,20 @@ public class ResourceController {
     public String createResource(@Valid @ModelAttribute("createResourceForm") CreateResourceDto resource, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("showCreateResourceForm", true);
-            return "resources";
+            return "pages/resources/resources";
         }
         var resourceImg = resource.getImageUrl();
         if (resourceImg.isEmpty()) {
             bindingResult.rejectValue("imageUrl", "createResource.imageUrl", "image is required");
 
             model.addAttribute("showCreateResourceForm", true);
-            return "resources";
+            return "pages/resources/resources";
         }
         var cntType = resource.getImageUrl().getContentType();
         if (cntType.startsWith("image/svg+xml")) {
             bindingResult.rejectValue("imageUrl", "createResource.invalidType", "Image type svg+xml not allowed" + " ");
             model.addAttribute("showCreateResourceForm", true);
-            return "resources";
+            return "pages/resources/resources";
         }
 
         model.addAttribute("showCreateResourceForm", false);

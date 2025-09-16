@@ -45,8 +45,7 @@ public class HomeController {
         model.addAttribute("featuredResources", featuredResource);
         model.addAttribute("searchQuery", query);
 
-        return "home";
+        return "pages/home/home";
     }
-
 
 }
