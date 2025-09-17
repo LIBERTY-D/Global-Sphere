@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class CreateComment {
+    private Long id;//for updated only
     private Long postId;
     private String author;
     @NotBlank(message = "Comment cannot be empty")

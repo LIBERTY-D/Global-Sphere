@@ -129,7 +129,7 @@ public class FeedController {
         }
         try {
             model.addAttribute("post", feed);
-            feedService.updateFeed(id, currentUser, updateFeedDto);
+            feedService.updateFeed(id, updateFeedDto);
         } catch (IOException exp) {
             model.addAttribute("post", feed);
             bindingResult.rejectValue("file", "something wrong with your image");

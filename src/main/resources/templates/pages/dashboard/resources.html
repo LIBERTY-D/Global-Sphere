@@ -32,7 +32,8 @@
         </div>
         <div class="flex items-center space-x-4">
             <span class="hidden sm:inline">Hello,
-                <span class="font-semibold" sec:authentication="name">User</span>
+                <span class="font-semibold"
+                      sec:authentication="name">User</span>
             </span>
             <a th:href="@{/dashboard}"
                class="px-3 py-2 rounded-lg bg-white text-primary-600 font-semibold hover:bg-gray-100">
@@ -66,19 +67,26 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="res : ${resources}" class="border-b hover:bg-gray-50">
-                <td class="px-6 py-3" th:text="${res.id}"></td>
+            <tr th:each="resource : ${resources}"
+                class="border-b hover:bg-gray-50">
+                <td class="px-6 py-3" th:text="${resource.id}"></td>
                 <td class="px-6 py-3"
-                    th:text="${#temporals.format(res.createdAt,'dd MMM yyyy HH:mm')}"></td>
-                <td class="px-6 py-3 font-semibold text-gray-800" th:text="${res.title}"></td>
-                <td class="px-6 py-3 text-gray-600" th:text="${res.author}"></td>
-                <td class="px-6 py-3 max-w-xs truncate text-gray-700" th:text="${res.description}"
-                    th:title="${res.description}"></td>
-                <td class="px-6 py-3 text-gray-700" th:text="${res.resourceCount}"></td>
+                    th:text="${#temporals.format(resource.createdAt,'dd MMM yyyy HH:mm')}"></td>
+                <td class="px-6 py-3 font-semibold text-gray-800"
+                    th:text="${resource.title}"></td>
+                <td class="px-6 py-3 text-gray-600"
+                    th:text="${resource.author}"></td>
+                <td class="px-6 py-3 max-w-xs truncate text-gray-700"
+                    th:text="${resource.description}"
+                    th:title="${resource.description}"></td>
+                <td class="px-6 py-3 text-gray-700"
+                    th:text="${resource.resourceCount}"></td>
                 <td class="px-6 py-3 flex gap-2">
-                    <a th:href="@{'/dashboard/resources/edit/' + ${res.id}}"
+                    <a th:href="@{/dashboard/resources/edit/{id}(id=${resource.id})}"
+                       id="modal-edit-resource-btn"
                        class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Edit</a>
-                    <a th:href="@{'/dashboard/resources/delete/' + ${res.id}}"
+                    <div th:replace="~{/pages/dashboard/modals/edit-resource :: modal-edit-resource}"></div>
+                    <a th:href="@{'/dashboard/resources/delete/' + ${resource.id}}"
                        class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
                        onclick="return confirm('Delete this resource?')">Delete</a>
                 </td>
@@ -88,5 +96,6 @@
     </div>
 </main>
 
+<script th:src="@{/js/dashboard.js}"></script>
 </body>
 </html>
