@@ -32,7 +32,8 @@
         </div>
         <div class="flex items-center space-x-4">
             <span class="hidden sm:inline">Hello,
-                <span class="font-semibold" sec:authentication="name">User</span>
+                <span class="font-semibold"
+                      sec:authentication="name">User</span>
             </span>
             <a th:href="@{/dashboard}"
                class="px-3 py-2 rounded-lg bg-white text-primary-600 font-semibold hover:bg-gray-100">
@@ -57,20 +58,28 @@
             <thead class="bg-gradient-to-r from-primary-500 to-primary-700 text-white">
             <tr>
                 <th class="px-6 py-3 text-left text-sm font-semibold">ID</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold">CREATED_AT</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold">Author</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold">
+                    CREATED_AT
+                </th>
+                <th class="px-6 py-3 text-left text-sm font-semibold">Author
+                </th>
                 <th class="px-6 py-3 text-left text-sm font-semibold">Text</th>
                 <th class="px-6 py-3 text-left text-sm font-semibold">Feed</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold">Created At</th>
-                <th class="px-6 py-3 text-left text-sm font-semibold">Actions</th>
+                <th class="px-6 py-3 text-left text-sm font-semibold">Created
+                    At
+                </th>
+                <th class="px-6 py-3 text-left text-sm font-semibold">Actions
+                </th>
             </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
             <tr th:each="comment : ${comments}" class="hover:bg-gray-50">
-                <td class="px-6 py-3 text-sm text-gray-700" th:text="${comment.id}"></td>
+                <td class="px-6 py-3 text-sm text-gray-700"
+                    th:text="${comment.id}"></td>
                 <td class="px-6 py-3 text-sm text-gray-700"
                     th:text="${#temporals.format(comment.createdAt,'dd MMM yyyy HH:mm')}"></td>
-                <td class="px-6 py-3 text-sm text-gray-700" th:text="${comment.author}"></td>
+                <td class="px-6 py-3 text-sm text-gray-700"
+                    th:text="${comment.author}"></td>
                 <td class="px-6 py-3 text-sm text-gray-700 max-w-xs truncate"
                     th:text="${comment.text}"></td>
                 <td class="px-6 py-3 text-sm text-gray-700"
@@ -78,9 +87,14 @@
                 <td class="px-6 py-3 text-sm text-gray-700"
                     th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
                 <td class="px-6 py-3 text-sm flex gap-2">
-                    <a th:href="@{'/comments/edit/' + ${comment.id}}"
-                       class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Edit</a>
-                    <a th:href="@{'/comments/delete/' + ${comment.id}}"
+                    <a id="edit-comment-btn-id"
+                       th:href="@{'/dashboard/comments/edit/' + ${comment.id}}"
+                       class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                        Edit
+                    </a>
+                    <div
+                            th:replace="~{pages/dashboard/modals/edit-comment :: editCommentModal}"></div>
+                    <a th:href="@{'/dashboard/comments/delete/' + ${comment.id}}"
                        class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
                        onclick="return confirm('Are you sure you want to delete this comment?');">Delete</a>
                 </td>
@@ -89,6 +103,6 @@
         </table>
     </div>
 </main>
-
+<script th:src="@{/js/dashboard.js}"></script>
 </body>
 </html>

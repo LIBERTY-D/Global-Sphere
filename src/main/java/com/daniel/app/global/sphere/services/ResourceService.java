@@ -93,7 +93,6 @@ public class ResourceService {
     @Transactional
     public boolean updateResource(Long resourceId, EditResourceDto dto) {
         log.info("UPDATING RESOURCE");
-        User user = userService.getAuthenticatedUser();
         Resource resource = repository.findById(resourceId).orElseThrow(() -> new IllegalArgumentException("Resource not found"));
         resource.setTitle(dto.getTitle());
         resource.setDescription(dto.getDescription());
@@ -116,7 +115,7 @@ public class ResourceService {
 
     public EditResourceDto getResourceById(Long resourceId) {
         var resource = repository.findById(resourceId).orElse(new Resource());
-        return new EditResourceDto(resource.getTitle(),
+        return new EditResourceDto(resourceId,resource.getTitle(),
                 resource.getDescription(), resource.getContent(),
                 null,
                 resource.getExternalUrl());
@@ -124,5 +123,25 @@ public class ResourceService {
 
     public void deleteResource(Long id) {
         repository.deleteById(id);
+    }
+
+    public void updateResource(EditResourceDto dto) {
+        log.info("UPDATING RESOURCE BY ADMIN");
+        Resource resource = repository.findById(dto.getId()).orElseThrow(() -> new IllegalArgumentException("Resource not found"));
+        resource.setTitle(dto.getTitle());
+        resource.setDescription(dto.getDescription());
+        resource.setContent(dto.getContent());
+        String newUrl = CommonUtil.checkLinkValidation(dto.getExternalUrl(), dto);
+        resource.setExternalUrl(newUrl);
+        MultipartFile file = dto.getImage();
+        if (file != null && !file.isEmpty()) {
+            try {
+                resource.setImageUrl(file.getBytes());
+            } catch (IOException e) {
+                throw new FileHandlerException("imageUrl", e.getMessage());
+            }
+        }
+
+        repository.save(resource);
     }
 }

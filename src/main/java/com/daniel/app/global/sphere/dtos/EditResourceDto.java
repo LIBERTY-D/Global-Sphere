@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @ToString
 public class EditResourceDto {
+    private Long id;
     @NotBlank(message = "Title is required")
     private String title;
     @NotBlank(message = "Description is required")

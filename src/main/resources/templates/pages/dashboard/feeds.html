@@ -32,7 +32,8 @@
         </div>
         <div class="flex items-center space-x-4">
             <span class="hidden sm:inline">Hello,
-                <span class="font-semibold" sec:authentication="name">User</span>
+                <span class="font-semibold"
+                      sec:authentication="name">User</span>
             </span>
             <a th:href="@{/dashboard}"
                class="px-3 py-2 rounded-lg bg-white text-primary-600 font-semibold hover:bg-gray-100">
@@ -71,14 +72,17 @@
                 <td class="px-6 py-3"
                     th:text="${#temporals.format(feed.createdAt,'dd MMM yyyy HH:mm')}"></td>
                 <td class="px-6 py-3" th:text="${feed.author}"></td>
-                <td class="px-6 py-3 max-w-xs truncate" th:text="${feed.content}"
+                <td class="px-6 py-3 max-w-xs truncate"
+                    th:text="${feed.content}"
                     th:title="${feed.content}">
                 </td>
                 <td class="px-6 py-3" th:text="${feed.likes}"></td>
                 <td class="px-6 py-3" th:text="${feed.type}"></td>
                 <td class="px-6 py-3 flex gap-2">
-                    <a th:href="@{'/dashboard/feeds/edit/' + ${feed.id}}"
+                    <a onclick="openEditFeedModal()"
+                       th:href="@{/dashboard/feeds/edit/{id}(id=${feed.id})}"
                        class="px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Edit</a>
+                    <div th:replace="~{pages/dashboard/modals/edit-feed :: editFeedModal}"></div>
                     <a th:href="@{'/dashboard/feeds/delete/' + ${feed.id}}"
                        class="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
                        onclick="return confirm('Delete this feed?')">Delete</a>
@@ -88,6 +92,6 @@
         </table>
     </div>
 </main>
-
+<script th:src="@{/js/dashboard.js}"></script>
 </body>
 </html>

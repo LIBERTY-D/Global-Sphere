@@ -1,0 +1,81 @@
+<div th:fragment="modal-edit-resource" id="modal-edit-resource"
+     class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4"
+     th:classappend="${showEditResourceForm} ? '' : 'hidden'">
+
+
+    <div class="bg-white rounded-2xl shadow-lg w-full max-w-xl p-6 relative">
+        <h2 class="text-xl font-semibold text-indigo-900 mb-4">Edit
+            Resource</h2>
+
+        <form th:action="@{/dashboard/resources/update}"
+              th:method="post"
+              enctype="multipart/form-data"
+              class="space-y-4"
+              th:object="${editResourceAdminForm}">
+            <!-- ID -->
+
+            <input hidden th:field="*{id}" required/>
+            <!-- Title -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Title</label>
+                <input type="text" th:field="*{title}" required
+                       class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300"/>
+                <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}"
+                   class="text-red-500 text-sm mt-1"></p>
+            </div>
+
+            <!-- Description -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Short
+                    Description</label>
+                <input type="text" th:field="*{description}" required
+                       class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300"/>
+                <p th:if="${#fields.hasErrors('description')}"
+                   th:errors="*{description}"
+                   class="text-red-500 text-sm mt-1"></p>
+            </div>
+
+            <!-- Content -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Content</label>
+                <textarea th:field="*{content}" rows="5"
+                          class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300"></textarea>
+                <p th:if="${#fields.hasErrors('content')}"
+                   th:errors="*{content}"
+                   class="text-red-500 text-sm mt-1"></p>
+            </div>
+
+            <!-- Cover Image -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Cover
+                    Image</label>
+                <input type="file" th:field="*{image}" accept="image/*"
+                       class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300"/>
+                <p class="text-xs text-gray-400 mt-1">Current image will be
+                    replaced if you upload a new one.</p>
+                <p th:if="${#fields.hasErrors('image')}" th:errors="*{image}"
+                   class="text-red-500 text-sm mt-1"></p>
+            </div>
+
+            <!-- External Link -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">External
+                    Link</label>
+                <input type="url" th:field="*{externalUrl}"
+                       class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300"/>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex justify-end gap-2 mt-4">
+                <button type="button"
+                        class="px-4 py-2 rounded-xl border border-gray-300 hover:bg-gray-50"
+                        id="modal-edit-resource-close">Cancel
+                </button>
+                <button type="submit"
+                        class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

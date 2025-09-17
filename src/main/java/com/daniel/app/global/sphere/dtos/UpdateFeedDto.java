@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class UpdateFeedDto  {
 
+    private  Long id;
     @NotBlank(message = "Post content cannot be empty")
     @Size(max = 2000, message = "Post content cannot exceed 2000 characters")
     private String content;

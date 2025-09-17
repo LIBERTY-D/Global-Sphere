@@ -119,7 +119,7 @@ public class FeedService {
 
     @Transactional
     @LogAspectAnnotation
-    public FeedItem updateFeed(Long postId, User currentUser, UpdateFeedDto updateFeedDto) throws IOException {
+    public FeedItem updateFeed(Long postId, UpdateFeedDto updateFeedDto) throws IOException {
         FeedItem feed = feedRepository.findById(postId).orElse(new FeedItem());
         feed.setContent(updateFeedDto.getContent());
         feed.setCodeSnippet(updateFeedDto.getCodeSnippet());
@@ -164,6 +164,7 @@ public class FeedService {
         return feedRepository.save(feedItem);
     }
 
+
     public void addImageToFeed(Long feedId, MultipartFile file) throws IOException {
         FeedItem feed = getFeedById(feedId);
         ImageEntity image = ImageEntity.builder()
@@ -171,7 +172,6 @@ public class FeedService {
                 .type(file.getContentType())
                 .data(file.getBytes())
                 .build();
-
         feed.getImages().add(image);
         feedRepository.save(feed);
     }
@@ -179,5 +179,22 @@ public class FeedService {
 
     public List<FeedItem> searchFeeds(String query) {
         return feedRepository.searchByAuthorOrContent(query);
+    }
+
+    @Transactional
+    public void updateFeed(UpdateFeedDto updateFeedDto) throws IOException {
+        FeedItem feed = feedRepository.findById(updateFeedDto.getId()).orElse(new FeedItem());
+        feed.setContent(updateFeedDto.getContent());
+        feed.setCodeSnippet(updateFeedDto.getCodeSnippet());
+        feed.setLink(updateFeedDto.getLink());
+        feed.getImages().clear();
+        MultipartFile file = updateFeedDto.getFile();
+        ImageEntity image = ImageEntity.builder()
+                .name(file.getOriginalFilename())
+                .type(file.getContentType())
+                .data(file.getBytes())
+                .build();
+        feed.getImages().add(image);
+
     }
 }
