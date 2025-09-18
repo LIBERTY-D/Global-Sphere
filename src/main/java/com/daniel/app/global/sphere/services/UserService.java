@@ -1,14 +1,17 @@
 package com.daniel.app.global.sphere.services;
 
 
+import com.daniel.app.global.sphere.Utils.CommonUtil;
 import com.daniel.app.global.sphere.annotation.LogAspectAnnotation;
 import com.daniel.app.global.sphere.config.CustomUserDetailsService;
 import com.daniel.app.global.sphere.dtos.*;
+import com.daniel.app.global.sphere.environment.MailEnv;
 import com.daniel.app.global.sphere.exceptions.AuthException;
 import com.daniel.app.global.sphere.mapper.UserMapper;
 import com.daniel.app.global.sphere.models.Role;
 import com.daniel.app.global.sphere.models.User;
 import com.daniel.app.global.sphere.repository.UserRepository;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -24,9 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -37,6 +38,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final SessionRegistry sessionRegistry;
+    private final EmailService emailService;
+    private final MailEnv mailEnv;
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -254,5 +257,40 @@ public class UserService {
 
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    public void sendForgotPasswordEmail(String email) {
+        if (userRepository.existsByEmail(email)) {
+            String token = CommonUtil.generateToken();
+            String resetLink = CommonUtil.getEmailLinkResetPassword(mailEnv.getMailResetPasswordUrl() + token);
+            User user = findUserByEmail(email);
+            user.setResetPasswordToken(token);
+            userRepository.save(user);
+            Map<String, Object> mapData = new HashMap<>();
+            mapData.put("to", email);
+            mapData.put("subject", "Password Reset");
+            mapData.put("userName", user.getName());
+            mapData.put("resetLink", resetLink);
+            try {
+                emailService.sendEmail(mapData, "/emails/forgot-password-email");
+            } catch (MessagingException exp) {
+                log.error("Error sending email");
+            }
+
+        } else {
+            log.info("USER DOES NOT EXIST TO SEND EMAIL");
+        }
+    }
+
+    public boolean resetPassword(String token, String password) {
+        Optional<User> userOpt = userRepository.findByResetPasswordToken(token);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            user.setResetPasswordToken(null);
+            user.setPassword(passwordEncoder.encode(password));
+            userRepository.save(user);
+            return true;
+        }
+        return false;
     }
 }

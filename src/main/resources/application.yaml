@@ -25,7 +25,25 @@ spring:
       hibernate:
         format_sql: true
     show-sql: false
-
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    mail-reset-password-url: ${MAIL_RESET_PASSWORD_URL} #my custom prop
+    default-encoding: UTF-8
+    properties:
+      mail:
+        mime:
+          charset: UTF-8
+        smtp:
+          writetimeout: 10000
+          connectiontimeout: 10000
+          timeout: 10000
+          auth: true
+          starttls:
+            enable: true
+            required: true
 server:
   port: ${APP_PORT}
 custom:

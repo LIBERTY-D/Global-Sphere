@@ -78,12 +78,37 @@ public class UserController {
         return "redirect:/home";
     }
 
+    @RequestMapping(value = "/global-sphere/reset-password", method = RequestMethod.GET)
+    public String getForgotPasswordPage(@RequestParam(name = "token", required = false) String token, Model model, HttpServletRequest request) {
+        ResetPasswordDto dto = new ResetPasswordDto();
+        dto.setToken(token);
+        model.addAttribute("resetPasswordForm", dto);
+        model.addAttribute("invalidToken", null);
+        return "pages/forgot-password/forgot-password";
+    }
+
+    @PostMapping("/global-sphere/reset-password")
+    public String handleResetPassword(@Valid @ModelAttribute("resetPasswordForm") ResetPasswordDto form, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            return "pages/forgot-password/forgot-password";
+        }
+        boolean isValidUser = userService.resetPassword(form.getToken(), form.getPassword());
+        if (!isValidUser) {
+            model.addAttribute("invalidToken", "The reset link is invalid or expired.");
+            return "pages/forgot-password/forgot-password";
+        }
+        redirectAttributes.addFlashAttribute("success", "Password updated successfully. Please sign in.");
+        return "redirect:/home";
+    }
+
     @PostMapping(value = "/forgot-password")
     public String forgotPassword(@Valid @ModelAttribute("forgotForm") ForgotPassword forgot, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("showPasswordForgotModal", true);
             return "pages/home/home";
         }
+        userService.sendForgotPasswordEmail(forgot.getEmail());
         model.addAttribute("showPasswordForgotModal", false);
         return "pages/home/home";
     }
@@ -98,9 +123,7 @@ public class UserController {
                 return "pages/home/home";
             }
             if (cntType.startsWith("image/svg+xml")) {
-                bindingResult.rejectValue("avatar", "avatar.invalidType",
-                        "Image type svg+xml not allowed" +
-                                " ");
+                bindingResult.rejectValue("avatar", "avatar.invalidType", "Image type svg+xml not allowed" + " ");
                 model.addAttribute("showEditProfileModal", true);
                 return "pages/home/home";
             }
@@ -131,11 +154,8 @@ public class UserController {
             return "redirect:/home";
         }
 
-        if (!userService.passwordsMatch(principal.getName(),
-                form.getCurrentPassword())) {
-            result.rejectValue("currentPassword", "currentPassword" +
-                    ".invalidMatch", "current password does match the one in " +
-                    "our system");
+        if (!userService.passwordsMatch(principal.getName(), form.getCurrentPassword())) {
+            result.rejectValue("currentPassword", "currentPassword" + ".invalidMatch", "current password does match the one in " + "our system");
             ra.addFlashAttribute("showUpdatePasswordModal", true);
             ra.addFlashAttribute(BindingResult.MODEL_KEY_PREFIX + "updatePasswordForm", result);
             ra.addFlashAttribute("updatePasswordForm", form);
@@ -153,8 +173,7 @@ public class UserController {
         return userService.getUserImage();
     }
 
-    @GetMapping(value = "/user/{id}/avatar", produces =
-            MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(value = "/user/{id}/avatar", produces = MediaType.IMAGE_JPEG_VALUE)
     @ResponseBody
     public byte[] getAvatar(@PathVariable Long id) {
         User user = userService.findUserImageById(id);

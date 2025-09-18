@@ -4,6 +4,9 @@ import com.daniel.app.global.sphere.dtos.CreateResourceDto;
 import com.daniel.app.global.sphere.dtos.EditResourceDto;
 import com.daniel.app.global.sphere.exceptions.InvalidLinkException;
 
+import java.security.SecureRandom;
+import java.util.Base64;
+
 public class CommonUtil {
     public static String checkLinkValidation(String link, CreateResourceDto form) {
         if (link == null || link.trim().isEmpty()) {
@@ -26,6 +29,17 @@ public class CommonUtil {
         }
 
         return link;
+    }
+
+    public static String generateToken() {
+        SecureRandom random = new SecureRandom();
+        byte[] bytes = new byte[32];
+        random.nextBytes(bytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+    }
+
+    public static String getEmailLinkResetPassword(String token) {
+        return token;
     }
 
 }

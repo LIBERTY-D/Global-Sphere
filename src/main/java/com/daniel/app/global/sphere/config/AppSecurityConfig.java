@@ -31,7 +31,10 @@ public class AppSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/home", "/about", "/signin", "/register", "/css/**", "/js/**", "/assets/**")
+                        .requestMatchers("/", "/home", "/about", "/signin",
+                                "/global-sphere/reset-password", "/forgot" +
+                                        "-password",
+                                "/register", "/css/**", "/js/**", "/assets/**")
                         .permitAll().
                         requestMatchers("/dashboard").hasRole("ADMIN")
                         .anyRequest().authenticated()

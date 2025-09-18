@@ -98,7 +98,7 @@ createPostBtn?.addEventListener("click",()=>{
 //search input
   const searchInput = $("#searchInput");
   const searchBtn = $("#searchBtn");
-  searchInput.addEventListener("input", () => {
+  searchInput?.addEventListener("input", () => {
         searchBtn.disabled = ! searchInput.value.trim();
    });
 // edit modal

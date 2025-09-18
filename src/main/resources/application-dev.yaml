@@ -9,3 +9,12 @@ DB: global_db
 APP_PORT: 8080
 APP_ACTIVE_PROFILE: dev
 APP_POPULATE: true
+
+
+#EMAIL
+MAIL_PORT: 587
+MAIL_HOST: smtp.gmail.com
+MAIL_USERNAME: myemail@example.com
+MAIL_PASSWORD: mymailpassword
+MAIL_RESET_PASSWORD_URL: "http://localhost:8080/global-sphere/reset-password?token="
+MAIL_ENABLE: true

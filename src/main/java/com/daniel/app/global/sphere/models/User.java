@@ -30,6 +30,7 @@ public class User extends BaseEntity implements UserDetails {
     private String occupation;
     private String jobTitle;
     private String password;
+    private String resetPasswordToken;
 
     // Role
     private Role role;

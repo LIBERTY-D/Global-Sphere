@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 @SpringBootApplication
 @RequiredArgsConstructor
 @Slf4j
+@EnableAsync
 @EnableJpaAuditing(auditorAwareRef = "auditWareImpl")
 public class GlobalSphereApplication {
 
@@ -70,17 +72,17 @@ public class GlobalSphereApplication {
         user.setGithubUrl("https://github.com/alexdoe");
 
         User admin2 = new User(
-                "Danie Mukubvu",
+                "Danie MK",
                 "Computer Science",
                 null,
-                "INSTRUCTOR",
+                "Instructor",
                 Role.ADMIN
         );
         admin2.setPassword(passwordEncoder.encode("123456"));
         admin2.setFollowersCount(0);
         admin2.setFollowingCount(0);
         admin2.setPostsCount(0);
-        admin2.setEmail("daniel@example.com");
+        admin2.setEmail("daniel@gmail.com");
 
         userRepository.saveAll(List.of(admin, user, admin2));
     }
