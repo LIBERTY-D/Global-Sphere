@@ -15,22 +15,17 @@
                 <a class="text-gray-600 hover:text-gray-900" href="#discuss" sec:authorize="isAuthenticated()">Discussions</a>
                 <a class="text-gray-600 hover:text-gray-900" href="#people" sec:authorize="isAuthenticated()">People</a>
                 <a class="text-gray-600 hover:text-gray-900 mr-2"
-                   th:href="@{/dashboard}"
-                   sec:authorize="hasRole('ADMIN')">Dashboard</a>
-
+                   th:href="@{/dashboard}" sec:authorize="hasRole('ADMIN')">Dashboard</a>
             </nav>
 
             <!-- Right side: desktop only -->
             <div class="hidden md:flex items-center gap-3">
                 <!-- Search -->
                 <form sec:authorize="isAuthenticated()" th:action="@{/home}" method="get" class="flex items-center">
-                    <input id="searchInput"
-                           name="q"
-                           th:value="${searchQuery}"
+                    <input id="searchInput" name="q" th:value="${searchQuery}"
                            class="w-72 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm
-                  focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20"
-                           placeholder="Search post by content or author"
-                           type="text" />
+                           focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                           placeholder="Search post by content or author" type="text" />
                     <button id="searchBtn" type="submit"
                             class="ml-2 rounded-xl bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-700"
                             disabled>
@@ -38,22 +33,24 @@
                     </button>
                 </form>
 
-                <!-- Create post -->
+                <!-- Create post button -->
                 <button class="rounded-xl bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-700"
                         sec:authorize="isAuthenticated()" data-open="create-post">
                     Create Post
                 </button>
 
                 <!-- User auth buttons -->
-                <div th:if="${currentUser != null}" class="flex items-center gap-2">
-                    <img th:src="${currentUser.avatar != null} ? @{/user/image} : @{/assets/blank.jpg}"
+                <div sec:authorize="isAuthenticated()" class="flex items-center gap-2">
+                    <img th:src="@{/user/image}" th:if="${#authentication.principal.avatar != null}"
                          alt="Profile" class="h-9 w-9 rounded-full object-cover border-2 border-gray-300"/>
-                    <span th:text="${currentUser.name}" class="font-semibold text-gray-700"></span>
+                    <img th:src="@{/assets/blank.jpg}" th:if="${#authentication.principal.avatar == null}"
+                         alt="Profile" class="h-9 w-9 rounded-full object-cover border-2 border-gray-300"/>
+                    <span th:text="${#authentication.principal.name}" class="font-semibold text-gray-700"></span>
                     <a class="rounded-xl bg-gray-200 px-3 py-1 text-sm font-semibold hover:bg-gray-300"
                        th:href="@{/logout}">Logout</a>
                 </div>
 
-                <div th:unless="${currentUser != null}">
+                <div sec:authorize="isAnonymous()">
                     <button class="rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50"
                             data-open="signin">Sign in</button>
                     <button class="rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-black"
@@ -81,18 +78,17 @@
             <a class="text-gray-600 hover:text-gray-900" th:href="@{/resources}" sec:authorize="isAuthenticated()">Resources</a>
             <a class="text-gray-600 hover:text-gray-900" href="#discuss" sec:authorize="isAuthenticated()">Discussions</a>
             <a class="text-gray-600 hover:text-gray-900" href="#people" sec:authorize="isAuthenticated()">People</a>
-            <a class="text-gray-600 hover:text-gray-900 "
-               th:href="@{/dashboard}"
-               sec:authorize="hasRole('ADMIN')">Dashboard</a>
+            <a class="text-gray-600 hover:text-gray-900" th:href="@{/dashboard}" sec:authorize="hasRole('ADMIN')">Dashboard</a>
+
             <!-- User auth buttons -->
-            <div th:if="${currentUser != null}">
+            <div sec:authorize="isAuthenticated()">
                 <button class="rounded-xl bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700"
                         data-open="create-post">Create Post</button>
                 <a class="rounded-xl bg-gray-200 px-3 py-2 text-sm font-semibold hover:bg-gray-300"
                    th:href="@{/logout}">Logout</a>
             </div>
-            <div th:unless="${currentUser != null}">
-                <button class="rounded-xl border border-gray-200 px-4 py-2 text-sm font-semibold hover:bg-gray-50"
+            <div sec:authorize="isAnonymous()">
+                <button class="rounded-xl border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
                         data-open="signin">Sign in</button>
                 <button class="rounded-xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-black"
                         data-open="signup">Sign up</button>

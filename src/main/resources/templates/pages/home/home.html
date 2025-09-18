@@ -39,7 +39,7 @@
 <div th:replace="~{fragments/hero :: hero}"></div>
 
 <!-- Main grid -->
-<main id="feed" sec:authorize="isAuthenticated()"
+<main id="feed" sec:authorize="isAuthenticated()" th:if="${currentUser != null}"
       class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
     <!-- Left sidebar -->
     <aside class="lg:col-span-3 space-y-6">
@@ -68,6 +68,7 @@
             No available feeds 😔
         </div>
     </section>
+
 
     <!-- Right sidebar -->
     <div th:replace="~{fragments/right-sidebar :: right-sidebar(${follow}, ${featuredResources})}"></div>

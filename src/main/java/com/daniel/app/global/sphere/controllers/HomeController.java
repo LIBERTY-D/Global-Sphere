@@ -8,6 +8,7 @@ import com.daniel.app.global.sphere.models.User;
 import com.daniel.app.global.sphere.services.FeedService;
 import com.daniel.app.global.sphere.services.ResourceService;
 import com.daniel.app.global.sphere.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,21 +28,28 @@ public class HomeController {
 
 
     @RequestMapping(value = {"", "/", "home"}, method = RequestMethod.GET)
-    public String getHomePage(@RequestParam(name = "q", required = false) String query, Model model) {
+    public String getHomePage(@RequestParam(name = "q", required = false) String query,
+                              Model model,
+                              HttpServletRequest request) {
+
         User currentUser = userService.getAuthenticatedUser();
-
-        List<FeedItem> feeds;
-        if (query != null && !query.isBlank()) {
-            feeds = feedService.searchFeeds(query);
-        } else {
-            feeds = feedService.getFeeds();
+        if (currentUser == null) {
+            // Replace invalid/deleted authentication with anonymous token
+            userService.ensureAnonymousIfDeleted(currentUser);
         }
+        // Load feeds
+        List<FeedItem> feeds = (query != null && !query.isBlank())
+                ? feedService.searchFeeds(query)
+                : feedService.getFeeds();
 
+        // Load resources and people to follow
         List<Resource> featuredResource = resourceService.getFeaturedResources();
         List<Person> peoples = userService.peopleToFollow();
+
         if (!model.containsAttribute("updatePasswordForm")) {
             model.addAttribute("updatePasswordForm", new UpdatePasswordDto());
         }
+
         model.addAttribute("feeds", feeds);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("follow", peoples);
@@ -50,5 +58,6 @@ public class HomeController {
 
         return "pages/home/home";
     }
+
 
 }

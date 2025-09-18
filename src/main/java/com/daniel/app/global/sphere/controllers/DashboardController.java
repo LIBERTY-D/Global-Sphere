@@ -63,6 +63,7 @@ public class DashboardController {
     @GetMapping("/users/delete/{id}")
     public String deleteUser(@PathVariable Long id) {
         userService.deleteUserById(id);
+
         return "redirect:/dashboard/users";
     }
 

@@ -11,8 +11,13 @@ import com.daniel.app.global.sphere.models.User;
 import com.daniel.app.global.sphere.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,7 +36,7 @@ public class UserService {
     private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-
+    private final SessionRegistry sessionRegistry;
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -87,13 +92,17 @@ public class UserService {
 
     public User getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated() && !(authentication.getPrincipal() instanceof String && authentication.getPrincipal().equals("anonymousUser"))) {
-            User principal = (User) authentication.getPrincipal();
-            return findUserByEmail(principal.getEmail());
-
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
         }
-        return null;
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            return null;
+        }
+
+        User principal = (User) authentication.getPrincipal();
+        return userRepository.findByEmail(principal.getEmail()).orElse(null);
     }
+
 
     public List<Person> peopleToFollow() {
         User authenticated = getAuthenticatedUser();
@@ -166,8 +175,28 @@ public class UserService {
         return userRepository.findById(id).orElse(new User());
     }
 
+    // called by admin
+    @Transactional
     public void deleteUserById(Long id) {
+        User user = userRepository.findById(id).get();
+        sessionRegistry.getAllPrincipals().forEach(principal -> {
+            if (principal instanceof UserDetails userDetails && userDetails.getUsername().equals(user.getEmail())) {
+                sessionRegistry.getAllSessions(principal, false).forEach(SessionInformation::expireNow);
+            }
+        });
         userRepository.deleteById(id);
+    }
+
+    public void ensureAnonymousIfDeleted(User user) {
+        if (user == null) {
+            SecurityContextHolder.getContext().setAuthentication(
+                    new AnonymousAuthenticationToken(
+                            "anonymous",
+                            "anonymousUser",
+                            AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS")
+                    )
+            );
+        }
     }
 
     public boolean passwordsMatch(String email, String currentPassword) {
@@ -205,5 +234,9 @@ public class UserService {
         dto.setAvatar(null);
         return dto;
 
+    }
+
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }

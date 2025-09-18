@@ -18,70 +18,71 @@ import java.util.List;
 @SpringBootApplication
 @RequiredArgsConstructor
 @Slf4j
-@EnableJpaAuditing( auditorAwareRef = "auditWareImpl")
+@EnableJpaAuditing(auditorAwareRef = "auditWareImpl")
 public class GlobalSphereApplication {
 
-	private  final UserRepository userRepository;
-	private  final PasswordEncoder passwordEncoder;
-	private  final Environment env;
-	public static void main(String[] args) {
-		SpringApplication.run(GlobalSphereApplication .class, args);
-	}
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final Environment env;
+
+    public static void main(String[] args) {
+        SpringApplication.run(GlobalSphereApplication.class, args);
+    }
 
 
-	@PostConstruct
-	@Profile("dev")
-	public void populate() {
-		if (!Boolean.parseBoolean(env.getProperty("custom.populate_db", "false"))) {
-			return;
-		}
+    @PostConstruct
+    @Profile("dev")
+    public void populate() {
+        if (!Boolean.parseBoolean(env.getProperty("custom.populate_db", "false"))) {
+            return;
+        }
 
-		log.info("POPULATING EXAMPLE USERS");
+        log.info("POPULATING EXAMPLE USERS");
 
-		User admin = new User(
-				"Alex Doe",
-				"Computer Science • Spring MVC",
-				null,
-				"Instructor",
-				Role.INSTRUCTOR
-		);
-		admin.setPassword(passwordEncoder.encode("123456"));
-		admin.setFollowersCount(0);
-		admin.setFollowingCount(0);
-		admin.setPostsCount(0);
-		admin.setEmail("user@example.com");
-		admin.setLinkedInUrl("https://linkedin.com/in/alexdoe");
-		admin.setGithubUrl("https://github.com/alexdoe");
+        User admin = new User(
+                "User",
+                "Computer Science • Spring MVC",
+                null,
+                "Instructor",
+                Role.INSTRUCTOR
+        );
+        admin.setPassword(passwordEncoder.encode("123456"));
+        admin.setFollowersCount(0);
+        admin.setFollowingCount(0);
+        admin.setPostsCount(0);
+        admin.setEmail("user@example.com");
+        admin.setLinkedInUrl("https://linkedin.com/in/alexdoe");
+        admin.setGithubUrl("https://github.com/alexdoe");
 
-		User user = new User(
-				"Liberty Mukubvu",
-				"Computer Science • Spring MVC",
-				null,
-				"Student",
-				Role.STUDENT
-		);
-		user.setPassword(passwordEncoder.encode("123456"));
-		user.setFollowersCount(0);
-		user.setFollowingCount(0);
-		user.setPostsCount(0);
-		user.setEmail("alex.doe@example.com");
-		user.setLinkedInUrl("https://linkedin.com/in/alexdoe");
-		user.setGithubUrl("https://github.com/alexdoe");
+        User user = new User(
+                "alex doe",
+                "Computer Science • Spring MVC",
+                null,
+                "Student",
+                Role.STUDENT
+        );
+        user.setPassword(passwordEncoder.encode("123456"));
+        user.setFollowersCount(0);
+        user.setFollowingCount(0);
+        user.setPostsCount(0);
+        user.setEmail("alex.doe@example.com");
+        user.setLinkedInUrl("https://linkedin.com/in/alexdoe");
+        user.setGithubUrl("https://github.com/alexdoe");
 
-		User admin2 = new User(
-				"Danie Mukubvu",
-				"Computer Science",
-				null,
-				"INSTRUCTOR",
-				Role.ADMIN
-		);
-		admin2.setPassword(passwordEncoder.encode("123456"));
-		admin2.setFollowersCount(0);
-		admin2.setFollowingCount(0);
-		admin2.setPostsCount(0);
-		admin2.setEmail("daniel@example.com");
+        User admin2 = new User(
+                "Danie Mukubvu",
+                "Computer Science",
+                null,
+                "INSTRUCTOR",
+                Role.ADMIN
+        );
+        admin2.setPassword(passwordEncoder.encode("123456"));
+        admin2.setFollowersCount(0);
+        admin2.setFollowingCount(0);
+        admin2.setPostsCount(0);
+        admin2.setEmail("daniel@example.com");
 
-		userRepository.saveAll(List.of(admin, user, admin2));
-	}
+        userRepository.saveAll(List.of(admin, user, admin2));
+    }
 
 }

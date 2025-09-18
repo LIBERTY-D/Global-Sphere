@@ -1,4 +1,7 @@
 spring:
+  output:
+    ansi:
+      enabled: ALWAYS
   profiles:
     active: ${APP_ACTIVE_PROFILE :dev}
   application:
@@ -17,13 +20,13 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
-    show-sql: true
+    show-sql: false
 
 server:
   port: ${APP_PORT}
 custom:
-  populate_db: ${APP_POPULATE :false}
+  populate_db: ${APP_POPULATE :true}
