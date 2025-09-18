@@ -162,13 +162,14 @@ public class FeedController {
         model.addAttribute("showDiscussionModal", false);
         return new ModelAndView("redirect:/home");
     }
+
     @GetMapping("/discussion/edit/{id}")
     public String editDiscussion(@PathVariable Long id, Model model) {
         FeedItem feed = feedService.getFeedById(id);
-        CreateDiscussion updateDiscussionDto =  new CreateDiscussion();
+        CreateDiscussion updateDiscussionDto = new CreateDiscussion();
         updateDiscussionDto.setText(feed.getContent());
         model.addAttribute("post", feed);
-        model.addAttribute("updateDiscussionDto",updateDiscussionDto);
+        model.addAttribute("updateDiscussionDto", updateDiscussionDto);
         return "pages/discussion/edit-discussion";
     }
 

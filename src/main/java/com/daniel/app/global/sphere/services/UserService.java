@@ -177,15 +177,26 @@ public class UserService {
 
     // called by admin
     @Transactional
-    public void deleteUserById(Long id) {
-        User user = userRepository.findById(id).get();
+    public void userDeletedByAdmin(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        // Expire sessions
         sessionRegistry.getAllPrincipals().forEach(principal -> {
-            if (principal instanceof UserDetails userDetails && userDetails.getUsername().equals(user.getEmail())) {
-                sessionRegistry.getAllSessions(principal, false).forEach(SessionInformation::expireNow);
+            if (principal instanceof UserDetails userDetails &&
+                    userDetails.getUsername().equals(user.getEmail())) {
+                sessionRegistry.getAllSessions(principal, false)
+                        .forEach(SessionInformation::expireNow);
             }
         });
+
+        // Update followers count
+        user.getFollowing().forEach(followedUser -> {
+            followedUser.setFollowersCount(followedUser.getFollowersCount() - 1);
+            userRepository.save(followedUser);
+        });
+
         userRepository.deleteById(id);
     }
+
 
     public void ensureAnonymousIfDeleted(User user) {
         if (user == null) {
@@ -213,6 +224,11 @@ public class UserService {
     @Transactional
     public void deleteUserByEmail(String name) {
         User user = findByEmail(name);
+        // Update followers count
+        user.getFollowing().forEach(followedUser -> {
+            followedUser.setFollowersCount(followedUser.getFollowersCount() - 1);
+            userRepository.save(followedUser);
+        });
         userRepository.delete(user);
     }
 
