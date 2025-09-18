@@ -36,7 +36,7 @@ public class GlobalSphereApplication {
 				"Instructor",
 				Role.INSTRUCTOR
 		);
-		admin.setPassword(passwordEncoder.encode("12345"));
+		admin.setPassword(passwordEncoder.encode("123456"));
 		admin.setFollowersCount(0);
 		admin.setFollowingCount(0);
 		admin.setPostsCount(0);
@@ -53,7 +53,7 @@ public class GlobalSphereApplication {
 				"Student",
 				Role.STUDENT
 		);
-		user.setPassword(passwordEncoder.encode("12345"));
+		user.setPassword(passwordEncoder.encode("123456"));
 		user.setFollowersCount(0);
 		user.setFollowingCount(0);
 		user.setPostsCount(0);
@@ -68,7 +68,7 @@ public class GlobalSphereApplication {
 				"INSTRUCTOR",
 				Role.ADMIN
 		);
-		admin2.setPassword(passwordEncoder.encode("12345"));
+		admin2.setPassword(passwordEncoder.encode("123456"));
 		admin2.setFollowersCount(0);
 		admin2.setFollowingCount(0);
 		admin2.setPostsCount(0);

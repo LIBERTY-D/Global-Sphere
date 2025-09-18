@@ -1,14 +1,12 @@
 package com.daniel.app.global.sphere.controllers;
 
 
-import com.daniel.app.global.sphere.dtos.EditProfileDto;
-import com.daniel.app.global.sphere.dtos.ForgotPassword;
-import com.daniel.app.global.sphere.dtos.SignIn;
-import com.daniel.app.global.sphere.dtos.SignUp;
+import com.daniel.app.global.sphere.dtos.*;
 import com.daniel.app.global.sphere.exceptions.AuthException;
 import com.daniel.app.global.sphere.models.User;
 import com.daniel.app.global.sphere.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +17,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
@@ -51,6 +52,7 @@ public class UserController {
         return "redirect:/home";
 
     }
+
 
     @PostMapping("/signin")
     public String signInUser(@Valid @ModelAttribute("signinForm") SignIn signIn, BindingResult bindingResult, Model model, HttpServletRequest request) {
@@ -108,8 +110,40 @@ public class UserController {
             model.addAttribute("showEditProfileModal", true);
             return "pages/home/home";
         }
+        userService.updateUser(editProfileDto);
+        return "redirect:/home";
+    }
 
-        Boolean res = userService.updateUser(editProfileDto);
+    @PostMapping("/profile/delete")
+    public String deleteAccount(Principal p, HttpServletRequest request, HttpServletResponse response) {
+        userService.deleteUserByEmail(p.getName());
+        new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
+        return "redirect:/home?logout=true";
+    }
+
+    @PostMapping("/profile/update-password")
+    public String updatePassword(@Valid @ModelAttribute("updatePasswordForm") UpdatePasswordDto form, BindingResult result, RedirectAttributes ra, Principal principal) {
+
+        if (result.hasErrors()) {
+            ra.addFlashAttribute("showUpdatePasswordModal", true);
+            ra.addFlashAttribute(BindingResult.MODEL_KEY_PREFIX + "updatePasswordForm", result);
+            ra.addFlashAttribute("updatePasswordForm", form);
+            return "redirect:/home";
+        }
+
+        if (!userService.passwordsMatch(principal.getName(),
+                form.getCurrentPassword())) {
+            result.rejectValue("currentPassword", "currentPassword" +
+                    ".invalidMatch", "current password does match the one in " +
+                    "our system");
+            ra.addFlashAttribute("showUpdatePasswordModal", true);
+            ra.addFlashAttribute(BindingResult.MODEL_KEY_PREFIX + "updatePasswordForm", result);
+            ra.addFlashAttribute("updatePasswordForm", form);
+            return "redirect:/home";
+
+        }
+        userService.updatePassword(principal.getName(), form);
+        ra.addFlashAttribute("successMessage", "Password updated successfully!");
         return "redirect:/home";
     }
 

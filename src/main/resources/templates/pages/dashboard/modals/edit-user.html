@@ -1,0 +1,79 @@
+<div th:fragment="editUserModal" id="editUserModal" class="fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50 px-4 py-6"
+     th:classappend="${showEditUserForm} ? ' flex' : ' hidden'">
+    <div class="bg-white rounded-2xl shadow-lg w-96 p-6 relative">
+        <h2 class="text-xl font-bold mb-4">Edit User</h2>
+
+        <form th:action="@{/dashboard/users/update}"
+              th:object="${updateUserProfileAdmin}"
+              method="post"
+              enctype="multipart/form-data"
+              class="space-y-4">
+            <input hidden th:field="*{id}">
+
+            <!-- Name -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Name</label>
+                <input type="text" th:field="*{name}"
+                       class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300"
+                       required>
+                <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+                   class="text-sm text-red-500 mt-1"></p>
+            </div>
+
+            <!-- Bio -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Bio</label>
+                <textarea th:field="*{bio}" rows="3"
+                          class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300"></textarea>
+                <p th:if="${#fields.hasErrors('bio')}" th:errors="*{bio}"
+                   class="text-sm text-red-500 mt-1"></p>
+            </div>
+
+            <!-- Job Title -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Job
+                    Title</label>
+                <input type="text" th:field="*{jobTitle}"
+                       class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300">
+                <p th:if="${#fields.hasErrors('jobTitle')}"
+                   th:errors="*{jobTitle}"
+                   class="text-sm text-red-500 mt-1"></p>
+            </div>
+
+            <!-- Role -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Role</label>
+                <select th:field="*{role}"
+                        class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300">
+                    <option value="" disabled>Select a role</option>
+                    <option th:each="r : ${roles}"
+                            th:value="${r}"
+                            th:text="${r}"></option>
+                </select>
+                <p th:if="${#fields.hasErrors('role')}" th:errors="*{role}"
+                   class="text-sm text-red-500 mt-1"></p>
+            </div>
+
+            <!-- Avatar -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Avatar</label>
+                <input type="file" th:field="*{avatar}" accept="image/*"
+                       class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300">
+                <p th:if="${#fields.hasErrors('avatar')}" th:errors="*{avatar}"
+                   class="text-sm text-red-500 mt-1"></p>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit"
+                    class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700">
+                Save Changes
+            </button>
+        </form>
+
+        <!-- Cancel -->
+        <button  id="close-edit-user-modal"
+                class="mt-4 text-sm text-gray-500 hover:underline">
+            Cancel
+        </button>
+    </div>
+</div>

@@ -1,6 +1,7 @@
 package com.daniel.app.global.sphere.controllers;
 
 import com.daniel.app.global.sphere.dtos.Person;
+import com.daniel.app.global.sphere.dtos.UpdatePasswordDto;
 import com.daniel.app.global.sphere.models.FeedItem;
 import com.daniel.app.global.sphere.models.Resource;
 import com.daniel.app.global.sphere.models.User;
@@ -38,7 +39,9 @@ public class HomeController {
 
         List<Resource> featuredResource = resourceService.getFeaturedResources();
         List<Person> peoples = userService.peopleToFollow();
-
+        if (!model.containsAttribute("updatePasswordForm")) {
+            model.addAttribute("updatePasswordForm", new UpdatePasswordDto());
+        }
         model.addAttribute("feeds", feeds);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("follow", peoples);
