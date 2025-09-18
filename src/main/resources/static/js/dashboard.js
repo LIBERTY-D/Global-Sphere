@@ -39,8 +39,6 @@ $("#uploadFileBtn-edit")?.addEventListener("click", () => $("#fileInput-edit").c
 
 
 // RESOURCES PAGE DASHBOARD
-
-
 // edit resource
 let modalEditResource =  $("#modal-edit-resource")
 let modalEditResourceClose  =$("#modal-edit-resource-close")
@@ -53,6 +51,19 @@ modalEditResourceOpenBtn?.addEventListener("click",(e)=>{
 
 
 modalEditResourceClose?.addEventListener("click",(e)=>{
-
    unflex(modalEditResource)
 })
+
+
+// USER PAGE DASHBOARD
+const editUserModal =  $("#editUserModal")
+const editUserBtn =  $("#user-edit-btn")
+const closeEditUserModal = $("#close-edit-user-modal")
+
+editUserBtn?.addEventListener("click",(e)=>{
+   flex(editUserModal)
+})
+
+closeEditUserModal?.addEventListener('click', function () {
+    unflex(editUserModal)
+  });

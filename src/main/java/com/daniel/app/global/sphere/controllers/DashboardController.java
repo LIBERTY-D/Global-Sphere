@@ -4,9 +4,11 @@ package com.daniel.app.global.sphere.controllers;
 import com.daniel.app.global.sphere.dtos.CreateComment;
 import com.daniel.app.global.sphere.dtos.EditResourceDto;
 import com.daniel.app.global.sphere.dtos.UpdateFeedDto;
+import com.daniel.app.global.sphere.dtos.UpdateUserProfileAdmin;
 import com.daniel.app.global.sphere.exceptions.FileHandlerException;
 import com.daniel.app.global.sphere.models.Comment;
 import com.daniel.app.global.sphere.models.FeedItem;
+import com.daniel.app.global.sphere.models.Role;
 import com.daniel.app.global.sphere.repository.CommentRepository;
 import com.daniel.app.global.sphere.services.DashboardService;
 import com.daniel.app.global.sphere.services.FeedService;
@@ -47,7 +49,13 @@ public class DashboardController {
     //====USERS====
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public String getUsers(Model model) {
+    public String getUsers(Model model, ModelMap modelMap) {
+
+        Boolean showModal = (Boolean) modelMap.get("showEditUserForm");
+        model.addAttribute("showEditUserForm", showModal != null && showModal);
+        if (!model.containsAttribute("updateUserProfileAdmin")) {
+            model.addAttribute("updateUserProfileAdmin", new UpdateUserProfileAdmin());
+        }
         model.addAttribute("users", userService.getAllUsers());
         return "pages/dashboard/users";
     }
@@ -55,6 +63,52 @@ public class DashboardController {
     @GetMapping("/users/delete/{id}")
     public String deleteUser(@PathVariable Long id) {
         userService.deleteUserById(id);
+        return "redirect:/dashboard/users";
+    }
+
+
+    @GetMapping("/users/edit/{id}")
+    public String editUser(@PathVariable Long id, Model model) {
+        model.addAttribute("roles", Role.values());
+        model.addAttribute("showEditUserForm", true);
+        model.addAttribute("updateUserProfileAdmin", userService.findUserById(id));
+        model.addAttribute("users", userService.getAllUsers());
+        return "pages/dashboard/users";
+    }
+
+    @PostMapping("/users/update")
+    public String updateUser(@Valid @ModelAttribute("updateUserProfileAdmin") UpdateUserProfileAdmin dto, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws FileHandlerException, IOException {
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("roles", Role.values());
+            redirectAttributes.addFlashAttribute(BindingResult.MODEL_KEY_PREFIX + "updateUserProfileAdmin", bindingResult);
+            redirectAttributes.addFlashAttribute("updateUserProfileAdmin", dto);
+            redirectAttributes.addFlashAttribute("showEditUserForm", true);
+            return "redirect:/dashboard/users";
+        }
+
+        var resourceImg = dto.getAvatar();
+        if (resourceImg.isEmpty()) {
+            redirectAttributes.addFlashAttribute("roles", Role.values());
+            bindingResult.rejectValue("avatar", "avatar.invalid", "Image " + "is required");
+            redirectAttributes.addFlashAttribute(BindingResult.MODEL_KEY_PREFIX + "updateUserProfileAdmin", bindingResult);
+            redirectAttributes.addFlashAttribute("updateUserProfileAdmin", dto);
+            redirectAttributes.addFlashAttribute("showEditUserForm", true);
+            return "redirect:/dashboard/users";
+        }
+
+        var cntType = resourceImg.getContentType();
+        if (cntType.startsWith("image/svg+xml")) {
+            bindingResult.rejectValue("avatar", "avatar.invalid",
+                    "SVG images not allowed");
+            redirectAttributes.addFlashAttribute("roles", Role.values());
+            redirectAttributes.addFlashAttribute(BindingResult.MODEL_KEY_PREFIX + "updateUserProfileAdmin", bindingResult);
+            redirectAttributes.addFlashAttribute("updateUserProfileAdmin", dto);
+            redirectAttributes.addFlashAttribute("showEditUserForm", true);
+            return "redirect:/dashboard/users";
+        }
+        userService.updateUser(dto);
+
         return "redirect:/dashboard/users";
     }
 

@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
-
 import java.time.LocalDateTime;
 
 @ControllerAdvice
@@ -16,6 +15,10 @@ import java.time.LocalDateTime;
 public class GlobalControllerAdvice {
 
     private final UserService userService;
+    @ModelAttribute("updatePasswordForm")
+    public UpdatePasswordDto updatePasswordForm() {
+        return new UpdatePasswordDto();
+    }
 
     @ModelAttribute("currentUser")
     public User currentUser() {

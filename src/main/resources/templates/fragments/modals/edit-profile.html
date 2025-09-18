@@ -1,12 +1,9 @@
 <div th:fragment="editProfileModal">
     <div id="editProfileModal"
-         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"  th:classappend="${showEditProfileModal} ? ' flex' : ' hidden'" >
+         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+         th:classappend="${showEditProfileModal} ? ' flex' : ' hidden'">
         <div class="bg-white rounded-2xl shadow-lg w-96 p-6">
             <h2 class="text-xl font-bold mb-4">Edit Profile</h2>
-<!--            <div th:if="${errorMessage}" class="text-red-600">-->
-            <!--                <p th:text="${errorMessage}"></p>-->
-            <!--            </div>-->
-
             <form th:action="@{/profile/edit}" th:object="${editProfileForm}"
                   method="post" enctype="multipart/form-data" class="space-y-4">
 
@@ -34,8 +31,7 @@
                     <label class="block text-sm font-medium text-gray-700">Occupation</label>
                     <select th:field="*{occupation}"
                             class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300">
-                        <option value="" disabled>Select your occupation
-                        </option>
+                        <option value="" disabled>Select your occupation</option>
                         <option value="Student">Student</option>
                         <option value="Instructor">Instructor</option>
                         <option value="Mentor">Mentor</option>
@@ -49,8 +45,7 @@
 
                 <!-- Job Title / Profession -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Job
-                        Title / Profession</label>
+                    <label class="block text-sm font-medium text-gray-700">Job Title / Profession</label>
                     <input type="text" th:field="*{jobTitle}"
                            placeholder="e.g., Java Developer, Web Developer, Data Scientist"
                            class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300">
@@ -77,9 +72,65 @@
                 </button>
             </form>
 
+            <!-- Update Password Button -->
+            <button onclick="document.getElementById('updatePasswordModal').classList.remove('hidden')"
+                    class="mt-4 w-full bg-yellow-500 text-white py-2 rounded-lg hover:bg-yellow-600">
+                Update Password
+            </button>
+
+            <!-- Delete Account Button -->
+            <form th:action="@{/profile/delete}" method="post" class="mt-4">
+                <button type="submit"
+                        onclick="return confirm('Delete this account?')"
+                        class="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700">
+                    Delete Account
+                </button>
+            </form>
+
+            <!-- Cancel -->
             <button onclick="document.getElementById('editProfileModal').classList.add('hidden')"
                     class="mt-4 text-sm text-gray-500 hover:underline">Cancel
             </button>
         </div>
     </div>
+
+    <!-- Update Password Modal -->
+    <div id="updatePasswordModal"
+         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+         th:classappend="${showUpdatePasswordModal} ? ' flex' : ' hidden'">
+        <div class="bg-white rounded-2xl shadow-lg w-96 p-6">
+            <h2 class="text-xl font-bold mb-4">Update Password</h2>
+            <form th:action="@{/profile/update-password}" th:object="${updatePasswordForm}" method="post" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Current Password</label>
+                    <input type="password" th:field="*{currentPassword}"
+                           class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300" required>
+                    <p th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}"
+                       class="text-sm text-red-500 mt-1"></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">New Password</label>
+                    <input type="password" th:field="*{newPassword}"
+                           class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300" required>
+                    <p th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"
+                       class="text-sm text-red-500 mt-1"></p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Confirm New Password</label>
+                    <input type="password" th:field="*{confirmPassword}"
+                           class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-300" required>
+                    <p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"
+                       class="text-sm text-red-500 mt-1"></p>
+                </div>
+                <button type="submit"
+                        class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700">
+                    Save Password
+                </button>
+            </form>
+            <button onclick="document.getElementById('updatePasswordModal').classList.add('hidden')"
+                    class="mt-4 text-sm text-gray-500 hover:underline">Cancel
+            </button>
+        </div>
+    </div>
+
 </div>

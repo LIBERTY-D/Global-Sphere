@@ -3,10 +3,7 @@ package com.daniel.app.global.sphere.services;
 
 import com.daniel.app.global.sphere.annotation.LogAspectAnnotation;
 import com.daniel.app.global.sphere.config.CustomUserDetailsService;
-import com.daniel.app.global.sphere.dtos.EditProfileDto;
-import com.daniel.app.global.sphere.dtos.Person;
-import com.daniel.app.global.sphere.dtos.SignIn;
-import com.daniel.app.global.sphere.dtos.SignUp;
+import com.daniel.app.global.sphere.dtos.*;
 import com.daniel.app.global.sphere.exceptions.AuthException;
 import com.daniel.app.global.sphere.mapper.UserMapper;
 import com.daniel.app.global.sphere.models.Role;
@@ -171,5 +168,42 @@ public class UserService {
 
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public boolean passwordsMatch(String email, String currentPassword) {
+        User user = findByEmail(email);
+        return passwordEncoder.matches(currentPassword, user.getPassword());
+    }
+
+    public void updatePassword(String name, UpdatePasswordDto form) {
+        User user = findByEmail(name);
+        user.setPassword(passwordEncoder.encode(form.getNewPassword()));
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteUserByEmail(String name) {
+        User user = findByEmail(name);
+        userRepository.delete(user);
+    }
+
+    public void updateUser(UpdateUserProfileAdmin dto) throws IOException {
+        User user = userRepository.findById(dto.getId()).get();
+        User updatedUser = UserMapper.toUser(user, dto);
+        userRepository.save(updatedUser);
+
+    }
+
+    public UpdateUserProfileAdmin findUserById(Long id) {
+        User user = userRepository.findById(id).orElse(new User());
+        UpdateUserProfileAdmin dto = new UpdateUserProfileAdmin();
+        dto.setId(user.getId());
+        dto.setName(user.getName());
+        dto.setBio(user.getBio());
+        dto.setRole(user.getRole());
+        dto.setJobTitle(dto.getJobTitle());
+        dto.setAvatar(null);
+        return dto;
+
     }
 }
