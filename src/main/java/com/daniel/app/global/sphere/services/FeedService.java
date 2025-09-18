@@ -95,6 +95,18 @@ public class FeedService {
 
     }
 
+    @LogAspectAnnotation
+    @Transactional
+    public boolean updateDiscussion(Long postId, CreateDiscussion updateDiscussion) {
+        log.info("UPDATING DISCUSSION");
+        FeedItem feed = feedRepository.findById(postId).orElse(new FeedItem());
+        FeedItem upDatedFeed = FeedMapper.toUpdateDiscussion(userService.getAuthenticatedUser(), feed, updateDiscussion);
+
+        feedRepository.save(upDatedFeed);
+        return true;
+
+    }
+
     @Transactional
     @LogAspectAnnotation
     public boolean createComment(CreateComment createComment) {

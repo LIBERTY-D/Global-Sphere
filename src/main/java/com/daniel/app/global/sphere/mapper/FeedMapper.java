@@ -11,7 +11,7 @@ import java.io.IOException;
 public class FeedMapper {
 
 
-    public static FeedItem  toFeedItem(User user, CreateFeedDto createPost) throws IOException {
+    public static FeedItem toFeedItem(User user, CreateFeedDto createPost) throws IOException {
         FeedItem feedItem = new FeedItem();
         feedItem.setAuthor(user.getName());
         feedItem.setAvatar(user.getAvatar());
@@ -21,10 +21,10 @@ public class FeedMapper {
         feedItem.setContent(createPost.getContent());
         feedItem.setLink(createPost.getLink());
         feedItem.setRole(user.getRole());
-        return  feedItem;
+        return feedItem;
     }
 
-    public static FeedItem toCreateDiscussion(User user, CreateDiscussion createDiscussion)  {
+    public static FeedItem toCreateDiscussion(User user, CreateDiscussion createDiscussion) {
         FeedItem feedItem = new FeedItem();
         feedItem.setAuthor(user.getName());
         feedItem.setAvatar(user.getAvatar());
@@ -34,7 +34,19 @@ public class FeedMapper {
         feedItem.setContent(createDiscussion.getText());
         feedItem.setLink(null);
         feedItem.setRole(user.getRole());
-        return  feedItem;
+        return feedItem;
+    }
+
+    public static FeedItem toUpdateDiscussion(User user,
+                                              FeedItem feedItem,
+                                              CreateDiscussion updateDto) {
+
+        feedItem.setAuthor(user.getName());
+        feedItem.setAvatar(user.getAvatar());
+        feedItem.setType(FeedItemType.DISCUSSION);
+        feedItem.setContent(updateDto.getText());
+        feedItem.setRole(user.getRole());
+        return feedItem;
     }
 
 }
