@@ -75,12 +75,13 @@
 </main>
 
 <!-- Resource grid (explore) -->
-<section id="resources-link"  sec:authorize="isAuthenticated()" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
+<section id="resources-link" sec:authorize="isAuthenticated()"
+         class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
     <div class="mb-4 flex items-center justify-between">
         <h2 class="text-xl font-semibold">Explore topics</h2>
         <a th:href="@{/resources}"
            class="text-sm font-semibold text-primary-700"
-          >See all
+        >See all
             →</a>
     </div>
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -97,14 +98,13 @@
 </section>
 
 <!-- Footer -->
-<div th:replace="~{/fragments/footer/footer :: footer}"></div>
-
-<div th:replace="~{/fragments/modals/create-post :: create-post}"></div>
-<div th:replace="~{/fragments/modals/sign-in :: sign-in}"></div>
-<div th:replace="~{/fragments/modals/sign-up :: sign-up}"></div>
-<div th:replace="~{/fragments/modals/forgot-password :: forgot-password}"></div>
-<div th:replace="~{/fragments/modals/edit-profile :: editProfileModal}"></div>
-<div th:replace="~{/fragments/modals/share-profile-modal :: shareProfileModal}"></div>
+<div th:replace="~{fragments/footer/footer :: footer}"></div>
+<div th:replace="~{fragments/modals/create-post :: create-post}"></div>
+<div th:replace="~{fragments/modals/sign-in :: sign-in}"></div>
+<div th:replace="~{fragments/modals/sign-up :: sign-up}"></div>
+<div th:replace="~{fragments/modals/forgot-password :: forgot-password}"></div>
+<div th:replace="~{fragments/modals/edit-profile :: editProfileModal}"></div>
+<div th:replace="~{fragments/modals/share-profile-modal :: shareProfileModal}"></div>
 
 
 <script th:src="@{/js/home.js}"></script>

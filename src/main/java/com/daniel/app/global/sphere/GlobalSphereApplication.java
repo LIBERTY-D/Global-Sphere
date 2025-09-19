@@ -33,7 +33,7 @@ public class GlobalSphereApplication {
 
 
     @PostConstruct
-    @Profile("dev")
+    @Profile(value = {"dev", "staging"})
     public void populate() {
         if (!Boolean.parseBoolean(env.getProperty("custom.populate_db", "false"))) {
             return;
